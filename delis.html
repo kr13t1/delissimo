@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Делиссимо</title>
+    <style>
+        /* Общие стили (адаптивные) */
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        h1 {
+            margin-top: 20px;
+            font-size: 2.5em;
+            color: #2EA692;
+            font-weight: bold;
+        }
+
+        /* Правила игры */
+        #rules {
+            margin-top: 20px;
+            text-align: left;
+            max-width: 80%;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #rules h2 {
+            font-size: 1.5em;
+            color: #2EA692;
+            margin-bottom: 10px;
+        }
+
+        #rules ol {
+            padding-left: 20px;
+        }
+
+        #game-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Сетка */
+        #grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            /* Original column count */
+            gap: 5px;
+            width: 100%;
+            max-width: 90%;
+            /* Adjust as needed */
+        }
+
+        .cell {
+            background-color: #fff;
+            border: 2px solid #06DDBA;
+            /* Original border */
+            border-radius: 10px;
+            /* Original border-radius */
+            padding: 10px;
+            /* Original padding */
+            font-size: 1em;
+            /* Original font size */
+            color: #009078;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Press Start 2P', cursive;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            user-select: none;
+            aspect-ratio: 1/1;
+            /* Maintain square shape */
+        }
+
+        .cell.taken-1 {
+            background-color: rgba(255, 107, 107, 0.5);
+            color: #888;
+        }
+
+        .cell.taken-2 {
+            background-color: rgba(76, 175, 80, 0.5);
+            color: #888;
+        }
+
+        /* Инфо об игре */
+        #game-info {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            max-width: 800px;
+            /* Limit width on larger screens */
+            margin-bottom: 20px;
+            font-size: 1em;
+        }
+
+        /* Лого */
+        #logo {
+            position: fixed;
+            left: 20px;
+            bottom: 20px;
+            width: 80px;
+            height: auto;
+        }
+
+        #mode-select {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        /* Иконка настроек */
+        #settings-icon {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            font-size: 2em;
+            color: #009078;
+            cursor: pointer;
+            display: none;
+            z-index: 3;
+        }
+
+        /* Модальное окно */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 10px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Кнопки */
+        button {
+            padding: 10px 20px;
+            font-size: 0.9em;
+            font-family: 'Nunito', sans-serif;
+            color: #fff;
+            background-color: #2EA692;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #009078;
+        }
+
+        /* Сообщение об игре */
+        #game-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2EA692;
+            display: none;
+            z-index: 2;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <img id="logo" src="placeholder.svg" alt="Логотип">
+
+    <h1>Делиссимо</h1>
+
+    <div id="mode-select">
+        <button id="two-player-mode">Играть с другом</button>
+        <button id="ai-mode">Играть с ИИ</button>
+    </div>
+
+    <div id="rules">
+        <h2>Как играть</h2>
+        <p>Проверьте свои навыки деления!</p>
+        <ol>
+            <li>На поле расположены числа.</li>
+            <li>У каждого игрока свой уникальный делитель.</li>
+            <li>Игроки отмечают числа, которые делятся на их делитель.</li>
+            <li>У каждого игрока свой счет.</li>
+            <li>Игра длится 30 секунд. Побеждает набравший наибольшую сумму!</li>
+        </ol>
+    </div>
+
+    <div id="game-container">
+        <i id="settings-icon" class="fas fa-cog"></i>
+        <div id="game-info">
+            <div>Игрок 1 (делитель: <span id="player-1-divisor">?</span>): <span id="player-1-score">0</span></div>
+            <div>Игрок 2 (делитель: <span id="player-2-divisor">?</span>): <span id="player-2-score">0</span></div>
+        </div>
+
+        <div id="number-panel">Время: <span id="timer">30</span></div>
+
+        <div id="grid"></div>
+    </div>
+
+    <!-- Модальное окно с правилами -->
+    <div id="rulesModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Как играть</h2>
+            <p>Проверьте свои навыки
