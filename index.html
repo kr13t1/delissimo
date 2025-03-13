@@ -6,14 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Делиссимо</title>
     <style>
-        /* Общие стили (включая стили из предыдущей игры) */
+        /* Общие стили */
         body {
             font-family: 'Nunito', sans-serif;
             background-color: #f0f0f0;
             color: #333;
             text-align: center;
             margin: 0;
-            padding: 20px;
+            padding: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -22,29 +22,49 @@
         }
 
         h1 {
-            margin-top: 20px;
-            font-size: 2.5em;
+            margin-top: 10px;
+            font-size: 2em;
             color: #2EA692;
             font-weight: bold;
         }
 
+        /* Кнопка "Выбрать другую игру" */
+        #back-button {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            padding: 10px 20px;
+            font-size: 0.9em;
+            font-family: 'Nunito', sans-serif;
+            color: #fff;
+            background-color: #2EA692;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            z-index: 1000; /* Чтобы кнопка была поверх других элементов */
+        }
+
+        #back-button:hover {
+            background-color: #009078;
+        }
+
         /* Правила игры */
         #rules {
-            margin-top: 20px;
+            margin-top: 10px;
             text-align: left;
-            max-width: 600px;
-            padding: 20px;
+            max-width: 90%;
+            padding: 15px;
             background-color: #fff;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         #rules h2 {
-            font-size: 1.8em;
+            font-size: 1.5em;
             color: #2EA692;
             margin-bottom: 10px;
             font-weight: bold;
-            font-family: 'Nunito', sans-serif;
         }
 
         #rules ol {
@@ -54,37 +74,39 @@
         #rules li {
             margin-bottom: 5px;
             color: #555;
-            font-family: 'Nunito', sans-serif;
         }
 
         #rules p {
             color: #555;
-            font-family: 'Nunito', sans-serif;
         }
 
+        /* Игровое поле */
         #game-container {
             display: none;
             flex-direction: column;
             align-items: center;
             position: relative;
-            /* Расположение элементов относительно друг друга */
+            width: 100%;
+            max-width: 800px;
+            margin: 10px auto;
         }
 
         #grid {
             display: grid;
-            grid-template-columns: repeat(12, 1fr); /* 12 колонок */
-            grid-template-rows: repeat(10, 1fr); /* 10 строк */
+            grid-template-columns: repeat(12, 1fr);
+            grid-template-rows: repeat(10, 1fr);
             gap: 5px;
-            max-width: 800px; /* Увеличено для большего поля */
-            margin: 20px auto;
+            width: 100%;
+            max-width: 800px;
+            margin: 10px auto;
         }
 
         .cell {
             background-color: #fff;
             border: 2px solid #06DDBA;
             border-radius: 10px;
-            padding: 15px;
-            font-size: 1.2em;
+            padding: 10px;
+            font-size: 1em;
             color: #009078;
             display: flex;
             align-items: center;
@@ -93,29 +115,26 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             cursor: pointer;
             user-select: none;
+            aspect-ratio: 1; /* Сохраняем квадратную форму ячеек */
         }
 
         .cell.taken-1 {
             background-color: rgba(255, 107, 107, 0.5);
-            /* Полупрозрачный красный */
             color: #888;
-            /* Более тусклый цвет текста */
         }
 
         .cell.taken-2 {
             background-color: rgba(76, 175, 80, 0.5);
-            /* Полупрозрачный зеленый */
             color: #888;
-            /* Более тусклый цвет текста */
         }
 
         /* Панель информации об игре */
         #game-info {
             display: flex;
             justify-content: space-around;
-            width: 80%;
-            margin-bottom: 20px;
-            font-size: 1.1em;
+            width: 100%;
+            margin-bottom: 10px;
+            font-size: 1em;
             color: #009078;
         }
 
@@ -126,8 +145,8 @@
 
         /* Панель с таймером и числом */
         #number-panel {
-            margin-top: 20px;
-            font-size: 1.3em;
+            margin-top: 10px;
+            font-size: 1.2em;
             color: #2EA692;
             font-weight: bold;
         }
@@ -135,22 +154,23 @@
         /* Логотип */
         #logo {
             position: fixed;
-            left: 20px;
-            bottom: 20px;
-            width: 100px;
+            left: 10px;
+            bottom: 10px;
+            width: 80px;
             height: auto;
         }
 
+        /* Сообщение о результате игры */
         #game-message {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             background-color: rgba(255, 255, 255, 0.9);
-            padding: 20px;
+            padding: 15px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            font-size: 1.5em;
+            font-size: 1.2em;
             font-weight: bold;
             color: #2EA692;
             display: none;
@@ -159,8 +179,8 @@
 
         /* Кнопки */
         button {
-            padding: 12px 24px;
-            font-size: 1em;
+            padding: 10px 20px;
+            font-size: 0.9em;
             font-family: 'Nunito', sans-serif;
             color: #fff;
             background-color: #2EA692;
@@ -175,7 +195,7 @@
         }
 
         #mode-select {
-            margin-top: 20px;
+            margin-top: 10px;
             display: flex;
             gap: 10px;
         }
@@ -185,7 +205,7 @@
             position: fixed;
             top: 10px;
             right: 10px;
-            font-size: 2em;
+            font-size: 1.5em;
             color: #009078;
             cursor: pointer;
             display: none;
@@ -208,16 +228,17 @@
         .modal-content {
             background-color: #fefefe;
             margin: 15% auto;
-            padding: 20px;
+            padding: 15px;
             border: 1px solid #888;
-            width: 80%;
+            width: 90%;
+            max-width: 500px;
             border-radius: 10px;
         }
 
         .close {
             color: #aaa;
             float: right;
-            font-size: 28px;
+            font-size: 24px;
             font-weight: bold;
         }
 
@@ -226,6 +247,48 @@
             color: black;
             text-decoration: none;
             cursor: pointer;
+        }
+
+        /* Адаптация для маленьких экранов */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5em;
+            }
+
+            #rules h2 {
+                font-size: 1.2em;
+            }
+
+            #rules ol {
+                padding-left: 15px;
+            }
+
+            .cell {
+                padding: 5px;
+                font-size: 0.8em;
+            }
+
+            #game-info {
+                font-size: 0.9em;
+            }
+
+            #number-panel {
+                font-size: 1em;
+            }
+
+            #logo {
+                width: 60px;
+            }
+
+            #game-message {
+                font-size: 1em;
+                padding: 10px;
+            }
+
+            button {
+                padding: 8px 16px;
+                font-size: 0.8em;
+            }
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
@@ -236,6 +299,9 @@
 </head>
 
 <body>
+    <!-- Кнопка "Выбрать другую игру" -->
+    <button id="back-button">Выбрать другую игру</button>
+
     <img id="logo" src="logo.png" alt="Логотип">
 
     <h1>Делиссимо</h1>
@@ -303,6 +369,7 @@
         const rulesModal = document.getElementById('rulesModal');
         const closeBtn = document.querySelector(".close");
         const gameMessage = document.getElementById('game-message');
+        const backButton = document.getElementById('back-button');
 
         // Параметры игры
         let numbers = [];
@@ -561,6 +628,11 @@
             if (event.target == rulesModal) {
                 rulesModal.style.display = "none";
             }
+        });
+
+        // Кнопка "Выбрать другую игру"
+        backButton.addEventListener('click', () => {
+            window.history.back(); // Возврат на предыдущую страницу
         });
     </script>
 </body>
