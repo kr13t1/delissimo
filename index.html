@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Делиссимо</title>
     <style>
-        /* Общие стили (адаптивные) */
+        /* Общие стили (включая стили из предыдущей игры) */
         body {
             font-family: 'Nunito', sans-serif;
             background-color: #f0f0f0;
@@ -32,7 +32,7 @@
         #rules {
             margin-top: 20px;
             text-align: left;
-            max-width: 80%;
+            max-width: 600px;
             padding: 20px;
             background-color: #fff;
             border-radius: 10px;
@@ -40,45 +40,50 @@
         }
 
         #rules h2 {
-            font-size: 1.5em;
+            font-size: 1.8em;
             color: #2EA692;
             margin-bottom: 10px;
+            font-weight: bold;
+            font-family: 'Nunito', sans-serif;
         }
 
         #rules ol {
             padding-left: 20px;
         }
 
+        #rules li {
+            margin-bottom: 5px;
+            color: #555;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        #rules p {
+            color: #555;
+            font-family: 'Nunito', sans-serif;
+        }
+
         #game-container {
             display: none;
             flex-direction: column;
             align-items: center;
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
+            position: relative;
+            /* Расположение элементов относительно друг друга */
         }
 
-        /* Сетка */
         #grid {
             display: grid;
-            grid-template-columns: repeat(10, 1fr);
-            /* Fixed column count */
+            grid-template-columns: repeat(8, 1fr);
             gap: 5px;
-            width: 100%;
-            max-width: 90%;
-            /* Adjust as needed */
+            max-width: 600px;
+            margin: 20px auto;
         }
 
         .cell {
             background-color: #fff;
             border: 2px solid #06DDBA;
-            /* Original border */
             border-radius: 10px;
-            /* Original border-radius */
-            padding: 10px;
-            /* Original padding */
-            font-size: 1em;
-            /* Original font size */
+            padding: 15px;
+            font-size: 1.2em;
             color: #009078;
             display: flex;
             align-items: center;
@@ -87,45 +92,100 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             cursor: pointer;
             user-select: none;
-            aspect-ratio: 1/1;
-            /* Maintain square shape */
         }
 
         .cell.taken-1 {
             background-color: rgba(255, 107, 107, 0.5);
+            /* Полупрозрачный красный */
             color: #888;
+            /* Более тусклый цвет текста */
         }
 
         .cell.taken-2 {
             background-color: rgba(76, 175, 80, 0.5);
+            /* Полупрозрачный зеленый */
             color: #888;
+            /* Более тусклый цвет текста */
         }
 
-        /* Инфо об игре */
+        /* Панель информации об игре */
         #game-info {
             display: flex;
             justify-content: space-around;
-            width: 100%;
-            max-width: 800px;
-            /* Limit width on larger screens */
+            width: 80%;
             margin-bottom: 20px;
-            font-size: 1em;
+            font-size: 1.1em;
+            color: #009078;
         }
 
-        /* Лого */
+        #player-1-score,
+        #player-2-score {
+            font-weight: bold;
+        }
+
+        /* Панель с таймером и числом */
+        #number-panel {
+            margin-top: 20px;
+            font-size: 1.3em;
+            color: #2EA692;
+            font-weight: bold;
+        }
+
+        /* Логотип */
         #logo {
             position: fixed;
             left: 20px;
             bottom: 20px;
-            width: 80px;
+            width: 100px;
             height: auto;
+        }
+
+        #game-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2EA692;
+            display: none;
+            z-index: 2;
+        }
+
+        /* Сетка */
+        #grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 10px;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+
+        /* Кнопки */
+        button {
+            padding: 12px 24px;
+            font-size: 1em;
+            font-family: 'Nunito', sans-serif;
+            color: #fff;
+            background-color: #2EA692;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #009078;
         }
 
         #mode-select {
             margin-top: 20px;
             display: flex;
             gap: 10px;
-            justify-content: center;
         }
 
         /* Иконка настроек */
@@ -175,44 +235,12 @@
             text-decoration: none;
             cursor: pointer;
         }
-
-        /* Кнопки */
-        button {
-            padding: 10px 20px;
-            font-size: 0.9em;
-            font-family: 'Nunito', sans-serif;
-            color: #fff;
-            background-color: #2EA692;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        button:hover {
-            background-color: #009078;
-        }
-
-        /* Сообщение об игре */
-        #game-message {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #2EA692;
-            display: none;
-            z-index: 2;
-        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 
 <body>
@@ -229,11 +257,11 @@
         <h2>Как играть</h2>
         <p>Проверьте свои навыки деления!</p>
         <ol>
-            <li>На поле расположены числа.</li>
-            <li>У каждого игрока свой уникальный делитель.</li>
-            <li>Игроки отмечают числа, которые делятся на их делитель.</li>
+            <li>На поле 8x8 расположены числа.</li>
+            <li>У каждого игрока свой уникальный делитель на всю игру.</li>
+            <li>Игроки по очереди (или одновременно) отмечают числа на поле, которые нацело делятся на их делитель.</li>
             <li>У каждого игрока свой счет.</li>
-            <li>Игра длится 30 секунд. Побеждает набравший наибольшую сумму!</li>
+            <li>Игра длится 30 секунд. Побеждает игрок, набравший наибольшую сумму отмеченных чисел.</li>
         </ol>
     </div>
 
@@ -247,6 +275,7 @@
         <div id="number-panel">Время: <span id="timer">30</span></div>
 
         <div id="grid"></div>
+        <div id="game-message"></div>
     </div>
 
     <!-- Модальное окно с правилами -->
@@ -256,15 +285,14 @@
             <h2>Как играть</h2>
             <p>Проверьте свои навыки деления!</p>
             <ol>
-                <li>На поле расположены числа.</li>
-                <li>У каждого игрока свой уникальный делитель.</li>
-                <li>Игроки отмечают числа, которые делятся на их делитель.</li>
+                <li>На поле 8x8 расположены числа.</li>
+                <li>У каждого игрока свой уникальный делитель на всю игру.</li>
+                <li>Игроки по очереди (или одновременно) отмечают числа на поле, которые нацело делятся на их делитель.</li>
                 <li>У каждого игрока свой счет.</li>
-                <li>Игра длится 30 секунд. Побеждает набравший наибольшую сумму!</li>
+                <li>Игра длится 30 секунд. Побеждает игрок, набравший наибольшую сумму отмеченных чисел.</li>
             </ol>
         </div>
     </div>
-    <div id="game-message"></div>
 
     <script>
         // Элементы страницы
@@ -285,7 +313,6 @@
         const gameMessage = document.getElementById('game-message');
 
         // Параметры игры
-        const gridSize = 10; // Original size 
         let numbers = [];
         let board = [];
         let player1Score = 0;
@@ -314,10 +341,10 @@
             numbers = [];
             board = [];
 
-            for (let i = 0; i < gridSize * gridSize; i++) {
+            for (let i = 0; i < 64; i++) {
                 const randomNumber = getRandomNumber();
                 numbers.push(randomNumber);
-                board.push(0);
+                board.push(0); // 0 = не занято, 1 = занято игроком 1, 2 = занято игроком 2
 
                 const cell = document.createElement('div');
                 cell.className = 'cell';
@@ -334,7 +361,6 @@
         // Функция обработки клика по ячейке
         function handleCellClick(index) {
             if (!gameActive) return;
-
             const cellValue = numbers[index];
             let cell = document.querySelector(`[data-index="${index}"]`);
 
@@ -356,6 +382,12 @@
                     player2ScoreDisplay.textContent = player2Score;
                     switchPlayerTurn();
 
+                } else if (aiMode && (board[index] === 0)) {
+                    return false;
+                    // Ai turn
+                }
+                else {
+                    return false
                 }
             } else if (aiMode) {
                 if (cellValue % player1Divisor === 0 && board[index] === 0) {
@@ -366,55 +398,53 @@
                     player1ScoreDisplay.textContent = player1Score;
                 }
             }
+
         }
 
-       // Function to generate the AI actions (a little less dumb and very slow)
-function aiMove() {
-    if (gameActive) {
-        const verySlowAiDelay = Math.floor(Math.random() * 4000) + 2000; // from 2 to 6 seconds
-        setTimeout(async () => {
-                 if (timeLeft > 0) {  await aiAction();}
-       return;
-        }, verySlowAiDelay);
-    }
-    return;
-}
-
-const aiAction = () => {
-    const available = board.reduce(
-        (acc, cell, index) => (cell === 0 ? [...acc, index] : acc),
-        []
-    );
-    let bestChoice = null;
-    let bestValue = -1;
-
-    for (let i = 0; i < available.length; i++) {
-        const index = available[i];
-        if (numbers[index] % player2Divisor === 0) {
-            if (numbers[index] > bestValue) {
-                bestValue = numbers[index];
-                bestChoice = index
-            }
-        }
-    }
-
-    if (bestChoice !== null ) {
-        const cellValue = numbers[bestChoice];
-        board[bestChoice] = 2;
-         player2Score += cellValue // Add score
-         player2ScoreDisplay.textContent = player2Score
-            const cell = document.querySelector(`[data-index="${bestChoice}"]`);
-             cell.classList.add('taken-2')
-        
-    }
-
+        // Function to generate the AI actions
+        function aiMove() {
+        //Wait a random amount of time to AI reaction
+            if (gameActive) {setTimeout(async () => {
+        if (timeLeft > 0) {await aiAction()}
         return
-}
+            }, Math.floor(Math.random() * 2000))}
+                return
+        }
+
+        // ИИ
+        const aiAction = () => {
+            const available = board.reduce(
+                (acc, cell, index) => (cell === 0 ? [...acc, index] : acc),
+                []
+            );
+            const aiChoices = available
+                .map((index) =>
+                    numbers[index] % player2Divisor === 0
+                        ? { cell: index, value: numbers[index] }
+                        : null
+                )
+                .filter((choice) => choice !== null)
+                .sort((a, b) => b.value - a.value);
+            //Если есть хоть одна закрашиваем наилучшую и выходим
+            if (aiChoices.length > 0) {
+                const bestChoice = aiChoices[0].cell;
+                board[bestChoice] = 2;
+                const cellValue = numbers[bestChoice];
+                player2Score += cellValue; // Начисляем очки
+                player2ScoreDisplay.textContent = player2Score;
+                const cell = document.querySelector(`[data-index="${bestChoice}"]`);
+                cell.classList.add('taken-2'); // Визуально отмечаем клетку
+            }
+
+            return
+        }
+
         // Функция смены хода игрока
         function switchPlayerTurn() {
             currentPlayer = currentPlayer === "player1" ? "player2" : "player1";
-        }
 
+            console.log("Сейчас ходит " + currentPlayer)
+        }
         // Функция начала игры
         function startGame(mode) {
             aiMode = (mode === 'ai');
@@ -422,17 +452,19 @@ const aiAction = () => {
             // Генерируем делители для каждого игрока
             player1Divisor = getRandomDivisor();
             player2Divisor = getRandomDivisor();
-
             //Исключение генерации одинаковых делителей для 2 режима
             if (aiMode === true) {
-                while (true) {
+                while(true) {
                     let newDiv = getRandomDivisor()
-                    if (newDiv !== player1Divisor) {
-                        player2Divisor = newDiv;
-                        break;
-                    }
+        if (newDiv !== player1Divisor){
+       player2Divisor = newDiv;
+        break;
+
+        }
                 }
+
             }
+
 
             player1DivisorDisplay.textContent = player1Divisor;
             player2DivisorDisplay.textContent = player2Divisor;
@@ -441,6 +473,8 @@ const aiAction = () => {
             modeSelect.style.display = 'none';
             gameContainer.style.display = 'flex';
             settingsIcon.style.display = 'block'; // Show settings icon
+           
+            
 
             player1Score = 0;
             player2Score = 0;
@@ -460,8 +494,9 @@ const aiAction = () => {
             timerInterval = setInterval(() => {
                 timeLeft--;
                 timerDisplay.textContent = timeLeft;
-
-           if (gameActive && aiMode && timeLeft > 0) { aiMove();}
+                if (gameActive && aiMode && timeLeft > 0 ) {
+                    aiMove(); // Move the AI every one second
+                }
 
                 if (timeLeft <= 0) {
                     endGame();
@@ -483,8 +518,8 @@ const aiAction = () => {
                 message = 'Ничья!';
             }
 
-            displayGameMessage(message)
-             resetGame();
+            displayGameMessage(message);
+            setTimeout(resetGame, 3000);
         }
 
         // Function to display the game message
