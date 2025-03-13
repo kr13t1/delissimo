@@ -13,12 +13,13 @@
             color: #333;
             text-align: center;
             margin: 0;
-            padding: 10px;
+            padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
             position: relative;
+            overflow: hidden; /* Убираем скролл */
         }
 
         h1 {
@@ -26,27 +27,6 @@
             font-size: 2em;
             color: #2EA692;
             font-weight: bold;
-        }
-
-        /* Кнопка "Выбрать другую игру" */
-        #back-button {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            padding: 10px 20px;
-            font-size: 0.9em;
-            font-family: 'Nunito', sans-serif;
-            color: #fff;
-            background-color: #2EA692;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-            z-index: 1000; /* Чтобы кнопка была поверх других элементов */
-        }
-
-        #back-button:hover {
-            background-color: #009078;
         }
 
         /* Правила игры */
@@ -85,32 +65,36 @@
             display: none;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
             position: relative;
             width: 100%;
             max-width: 800px;
             margin: 10px auto;
+            padding: 10px;
+            box-sizing: border-box;
         }
 
         #grid {
             display: grid;
             grid-template-columns: repeat(12, 1fr);
-            grid-template-rows: repeat(10, 1fr);
+            grid-template-rows: repeat(9, 1fr); /* Уменьшили количество строк до 9 */
             gap: 5px;
-            width: 100%;
+            width: 90vw; /* Ширина поля адаптируется под экран */
+            height: 60vh; /* Высота поля адаптируется под экран */
             max-width: 800px;
-            margin: 10px auto;
+            max-height: 600px;
+            margin: 0 auto;
         }
 
         .cell {
             background-color: #fff;
             border: 2px solid #06DDBA;
             border-radius: 10px;
-            padding: 10px;
-            font-size: 1em;
-            color: #009078;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 1em;
+            color: #009078;
             font-family: 'Press Start 2P', cursive;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             cursor: pointer;
@@ -249,6 +233,21 @@
             cursor: pointer;
         }
 
+        /* Кнопка "Назад" */
+        #back-button {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            color: #009078;
+            background-color: #f0f0f0;
+            border: 1px solid #009078;
+            border-radius: 5px;
+            padding: 5px 10px;
+            z-index: 1000;
+        }
+
         /* Адаптация для маленьких экранов */
         @media (max-width: 600px) {
             h1 {
@@ -264,7 +263,6 @@
             }
 
             .cell {
-                padding: 5px;
                 font-size: 0.8em;
             }
 
@@ -299,9 +297,6 @@
 </head>
 
 <body>
-    <!-- Кнопка "Выбрать другую игру" -->
-    <button id="back-button">Выбрать другую игру</button>
-
     <img id="logo" src="logo.png" alt="Логотип">
 
     <h1>Делиссимо</h1>
@@ -315,11 +310,11 @@
         <h2>Как играть</h2>
         <p>Проверьте свои навыки деления!</p>
         <ol>
-            <li>На поле 10x12 расположены числа.</li>
+            <li>На поле 9x12 расположены числа.</li>
             <li>У каждого игрока свой уникальный делитель на всю игру.</li>
             <li>Игроки по очереди (или одновременно) отмечают числа на поле, которые нацело делятся на их делитель.</li>
             <li>У каждого игрока свой счет.</li>
-            <li>Игра длится 30 секунд. Побеждает игрок, набравший наибольшую сумму отмеченных чисел.</li>
+            <li>Игра длится 20 секунд. Побеждает игрок, набравший наибольшую сумму отмеченных чисел.</li>
         </ol>
     </div>
 
@@ -330,7 +325,7 @@
             <div>Игрок 2 (делитель: <span id="player-2-divisor">?</span>): <span id="player-2-score">0</span></div>
         </div>
 
-        <div id="number-panel">Время: <span id="timer">30</span></div>
+        <div id="number-panel">Время: <span id="timer">20</span></div>
 
         <div id="grid"></div>
         <div id="game-message"></div>
@@ -343,14 +338,17 @@
             <h2>Как играть</h2>
             <p>Проверьте свои навыки деления!</p>
             <ol>
-                <li>На поле 10x12 расположены числа.</li>
+                <li>На поле 9x12 расположены числа.</li>
                 <li>У каждого игрока свой уникальный делитель на всю игру.</li>
                 <li>Игроки по очереди (или одновременно) отмечают числа на поле, которые нацело делятся на их делитель.</li>
                 <li>У каждого игрока свой счет.</li>
-                <li>Игра длится 30 секунд. Побеждает игрок, набравший наибольшую сумму отмеченных чисел.</li>
+                <li>Игра длится 20 секунд. Побеждает игрок, набравший наибольшую сумму отмеченных чисел.</li>
             </ol>
         </div>
     </div>
+
+    <!-- Кнопка "Назад" -->
+    <button id="back-button">Назад</button>
 
     <script>
         // Элементы страницы
@@ -378,7 +376,7 @@
         let player2Score = 0;
         let player1Divisor = 0;
         let player2Divisor = 0;
-        let timeLeft = 30;
+        let timeLeft = 20; // Время игры уменьшено до 20 секунд
         let gameActive = false;
         let timerInterval;
         let aiMode = false;
@@ -400,7 +398,7 @@
             numbers = [];
             board = [];
 
-            for (let i = 0; i < 120; i++) { // 10x12 = 120 ячеек
+            for (let i = 0; i < 108; i++) { // 9x12 = 108 ячеек
                 const randomNumber = getRandomNumber();
                 numbers.push(randomNumber);
                 board.push(0); // 0 = не занято, 1 = занято игроком 1, 2 = занято игроком 2
@@ -537,7 +535,7 @@
 
             player1Score = 0;
             player2Score = 0;
-            timeLeft = 30;
+            timeLeft = 20; // Время игры уменьшено до 20 секунд
             gameActive = true;
 
             player1ScoreDisplay.textContent = player1Score;
@@ -602,7 +600,7 @@
             player2Score = 0;
             player1Divisor = 0;
             player2Divisor = 0;
-            timeLeft = 30;
+            timeLeft = 20; // Время игры уменьшено до 20 секунд
             gameActive = false;
             aiMode = false;
             currentPlayer = "player1";
@@ -630,7 +628,7 @@
             }
         });
 
-        // Кнопка "Выбрать другую игру"
+        // Возврат на предыдущую страницу
         backButton.addEventListener('click', () => {
             window.history.back(); // Возврат на предыдущую страницу
         });
