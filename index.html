@@ -61,8 +61,8 @@
         /* Сетка */
         #grid {
             display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            /* Original column count */
+            grid-template-columns: repeat(10, 1fr);
+            /* Fixed column count */
             gap: 5px;
             width: 100%;
             max-width: 90%;
@@ -216,7 +216,7 @@
 </head>
 
 <body>
-    <img id="logo" src="logo.svg" alt="Логотип">
+    <img id="logo" src="placeholder.svg" alt="Логотип">
 
     <h1>Делиссимо</h1>
 
@@ -254,4 +254,288 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <h2>Как играть</h2>
-            <p>Проверьте свои навыки
+            <p>Проверьте свои навыки деления!</p>
+            <ol>
+                <li>На поле расположены числа.</li>
+                <li>У каждого игрока свой уникальный делитель.</li>
+                <li>Игроки отмечают числа, которые делятся на их делитель.</li>
+                <li>У каждого игрока свой счет.</li>
+                <li>Игра длится 30 секунд. Побеждает набравший наибольшую сумму!</li>
+            </ol>
+        </div>
+    </div>
+    <div id="game-message"></div>
+
+    <script>
+        // Элементы страницы
+        const grid = document.getElementById('grid');
+        const player1ScoreDisplay = document.getElementById('player-1-score');
+        const player2ScoreDisplay = document.getElementById('player-2-score');
+        const player1DivisorDisplay = document.getElementById('player-1-divisor');
+        const player2DivisorDisplay = document.getElementById('player-2-divisor');
+        const timerDisplay = document.getElementById('timer');
+        const modeSelect = document.getElementById('mode-select');
+        const gameContainer = document.getElementById('game-container');
+        const rulesDiv = document.getElementById('rules');
+        const twoPlayerButton = document.getElementById('two-player-mode');
+        const aiButton = document.getElementById('ai-mode');
+        const settingsIcon = document.getElementById('settings-icon');
+        const rulesModal = document.getElementById('rulesModal');
+        const closeBtn = document.querySelector(".close");
+        const gameMessage = document.getElementById('game-message');
+
+        // Параметры игры
+        const gridSize = 10; // Original size 
+        let numbers = [];
+        let board = [];
+        let player1Score = 0;
+        let player2Score = 0;
+        let player1Divisor = 0;
+        let player2Divisor = 0;
+        let timeLeft = 30;
+        let gameActive = false;
+        let timerInterval;
+        let aiMode = false;
+        let currentPlayer = "player1";
+
+        // Функция генерации случайного числа (делителя)
+        function getRandomDivisor() {
+            return Math.floor(Math.random() * 9) + 2; // Числа от 2 до 10
+        }
+
+        // Функция генерации случайного числа от 1 до 100
+        function getRandomNumber() {
+            return Math.floor(Math.random() * 100) + 1;
+        }
+
+        // Функция создания игрового поля
+        function createGrid() {
+            grid.innerHTML = '';
+            numbers = [];
+            board = [];
+
+            for (let i = 0; i < gridSize * gridSize; i++) {
+                const randomNumber = getRandomNumber();
+                numbers.push(randomNumber);
+                board.push(0);
+
+                const cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.textContent = randomNumber;
+                cell.dataset.index = i;
+
+                // Обработчик клика по ячейке
+                cell.addEventListener('click', () => handleCellClick(i));
+
+                grid.appendChild(cell);
+            }
+        }
+
+        // Функция обработки клика по ячейке
+        function handleCellClick(index) {
+            if (!gameActive) return;
+
+            const cellValue = numbers[index];
+            let cell = document.querySelector(`[data-index="${index}"]`);
+
+            // Two Player Mode
+            if (!aiMode) {
+                if (currentPlayer === "player1" && cellValue % player1Divisor === 0 && board[index] === 0) {
+                    board[index] = 1;
+                    cell = document.querySelector(`[data-index="${index}"]`);
+                    cell.classList.add('taken-1');
+                    player1Score += cellValue;
+                    player1ScoreDisplay.textContent = player1Score;
+                    switchPlayerTurn();
+
+                } else if (currentPlayer === "player2" && cellValue % player2Divisor === 0 && board[index] === 0) {
+                    board[index] = 2;
+                    cell = document.querySelector(`[data-index="${index}"]`);
+                    cell.classList.add('taken-2');
+                    player2Score += cellValue;
+                    player2ScoreDisplay.textContent = player2Score;
+                    switchPlayerTurn();
+
+                }
+            } else if (aiMode) {
+                if (cellValue % player1Divisor === 0 && board[index] === 0) {
+                    board[index] = 1;
+                    cell = document.querySelector(`[data-index="${index}"]`);
+                    cell.classList.add('taken-1');
+                    player1Score += cellValue;
+                    player1ScoreDisplay.textContent = player1Score;
+                }
+            }
+        }
+
+       // Function to generate the AI actions (a little less dumb and very slow)
+function aiMove() {
+    if (gameActive) {
+        const verySlowAiDelay = Math.floor(Math.random() * 4000) + 2000; // from 2 to 6 seconds
+        setTimeout(async () => {
+                 if (timeLeft > 0) {  await aiAction();}
+       return;
+        }, verySlowAiDelay);
+    }
+    return;
+}
+
+const aiAction = () => {
+    const available = board.reduce(
+        (acc, cell, index) => (cell === 0 ? [...acc, index] : acc),
+        []
+    );
+    let bestChoice = null;
+    let bestValue = -1;
+
+    for (let i = 0; i < available.length; i++) {
+        const index = available[i];
+        if (numbers[index] % player2Divisor === 0) {
+            if (numbers[index] > bestValue) {
+                bestValue = numbers[index];
+                bestChoice = index
+            }
+        }
+    }
+
+    if (bestChoice !== null ) {
+        const cellValue = numbers[bestChoice];
+        board[bestChoice] = 2;
+         player2Score += cellValue // Add score
+         player2ScoreDisplay.textContent = player2Score
+            const cell = document.querySelector(`[data-index="${bestChoice}"]`);
+             cell.classList.add('taken-2')
+        
+    }
+
+        return
+}
+        // Функция смены хода игрока
+        function switchPlayerTurn() {
+            currentPlayer = currentPlayer === "player1" ? "player2" : "player1";
+        }
+
+        // Функция начала игры
+        function startGame(mode) {
+            aiMode = (mode === 'ai');
+
+            // Генерируем делители для каждого игрока
+            player1Divisor = getRandomDivisor();
+            player2Divisor = getRandomDivisor();
+
+            //Исключение генерации одинаковых делителей для 2 режима
+            if (aiMode === true) {
+                while (true) {
+                    let newDiv = getRandomDivisor()
+                    if (newDiv !== player1Divisor) {
+                        player2Divisor = newDiv;
+                        break;
+                    }
+                }
+            }
+
+            player1DivisorDisplay.textContent = player1Divisor;
+            player2DivisorDisplay.textContent = player2Divisor;
+
+            rulesDiv.style.display = 'none';
+            modeSelect.style.display = 'none';
+            gameContainer.style.display = 'flex';
+            settingsIcon.style.display = 'block'; // Show settings icon
+
+            player1Score = 0;
+            player2Score = 0;
+            timeLeft = 30;
+            gameActive = true;
+
+            player1ScoreDisplay.textContent = player1Score;
+            player2ScoreDisplay.textContent = player2Score;
+            timerDisplay.textContent = timeLeft;
+
+            createGrid();
+            startTimer();
+        }
+
+        // Функция запуска таймера
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerDisplay.textContent = timeLeft;
+
+           if (gameActive && aiMode && timeLeft > 0) { aiMove();}
+
+                if (timeLeft <= 0) {
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        // Функция завершения игры
+        function endGame() {
+            clearInterval(timerInterval);
+            gameActive = false;
+
+            let message = '';
+            if (player1Score > player2Score) {
+                message = 'Победил игрок 1!';
+            } else if (player2Score > player1Score) {
+                message = 'Победил игрок 2!';
+            } else {
+                message = 'Ничья!';
+            }
+
+            displayGameMessage(message)
+             resetGame();
+        }
+
+        // Function to display the game message
+        function displayGameMessage(message) {
+            gameMessage.textContent = message;
+            gameMessage.style.display = 'block';
+        }
+
+        // Function to reset the game to initial state
+        function resetGame() {
+            gameContainer.style.display = 'none';
+            settingsIcon.style.display = 'none';
+            rulesDiv.style.display = 'block';
+            modeSelect.style.display = 'flex';
+            gameMessage.style.display = 'none';
+            rulesModal.style.display = "none"; // Hide the rules modal when reset
+
+            numbers = [];
+            board = [];
+            player1Score = 0;
+            player2Score = 0;
+            player1Divisor = 0;
+            player2Divisor = 0;
+            timeLeft = 30;
+            gameActive = false;
+            aiMode = false;
+            currentPlayer = "player1";
+
+        }
+
+        // Attach event listeners for mode selection buttons
+        twoPlayerButton.addEventListener('click', () => startGame('two-player'));
+        aiButton.addEventListener('click', () => startGame('ai'));
+
+        // Открытие модального окна с правилами
+        settingsIcon.addEventListener('click', () => {
+            rulesModal.style.display = "block";
+        });
+
+        // Закрытие модального окна
+        closeBtn.addEventListener('click', () => {
+            rulesModal.style.display = "none";
+        });
+
+        // Закрытие модального окна при клике вне его
+        window.addEventListener('click', (event) => {
+            if (event.target == rulesModal) {
+                rulesModal.style.display = "none";
+            }
+        });
+    </script>
+</body>
+
+</html>
