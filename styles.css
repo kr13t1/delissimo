@@ -81,16 +81,17 @@ h1 {
     display: grid;
     grid-template-columns: repeat(12, 1fr);
     grid-template-rows: repeat(9, 1fr);
-    gap: 2px; /* Уменьшаем зазор между клетками для мобильных устройств */
+    gap: 2px; /* Уменьшаем зазор между клетками */
     width: 90vmin; /* Используем минимальное значение из ширины и высоты экрана */
     height: 90vmin; /* Делаем поле квадратным */
     max-width: 90vh; /* Ограничиваем максимальную ширину */
     max-height: 90vw; /* Ограничиваем максимальную высоту */
-    margin: 0 auto;
+    margin: 0 auto; /* Центрируем поле */
     background-color: #f0f0f0; /* Фон поля, если нужно */
     border: 2px solid #06DDBA; /* Граница поля */
     border-radius: 10px; /* Скругление углов */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Тень */
+    aspect-ratio: 12 / 9; /* Сохраняем пропорции поля (12x9) */
 }
 
 .cell {
