@@ -1,159 +1,311 @@
-/* Основные стили */
-body {
-    font-family: 'Nunito', sans-serif;
-    background-color: #f0f0f0;
-    color: #333;
-    text-align: center;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    position: relative;
-    overflow: hidden;
+
+        /* Основные стили */
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+
+        h1 {
+            margin-top: 10px;
+            font-size: 2em;
+            color: #2EA692;
+            font-weight: bold;
+        }
+
+        /* Значок перезагрузки */
+        #reload-icon {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            font-size: 1.5em;
+            color: #009078;
+            cursor: pointer;
+            z-index: 3;
+        }
+
+        #reload-icon:hover {
+            color: #2EA692;
+        }
+
+        /* Правила игры */
+        #rules {
+            margin-top: 10px;
+            text-align: left;
+            max-width: 90%;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #rules h2 {
+            font-size: 1.5em;
+            color: #2EA692;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        #rules ol {
+            padding-left: 20px;
+        }
+
+        #rules li {
+            margin-bottom: 5px;
+            color: #555;
+        }
+
+        /* Игровое поле */
+        #game-container {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 10px auto;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        
+/* Адаптация для маленьких экранов */
+@media (max-width: 600px) {
+    #rules {
+        padding: 8px; /* Еще меньше padding */
+        max-width: 95%; /* Блок занимает почти всю ширину */
+    }
+
+    #rules h2 {
+        font-size: 1.2em; /* Уменьшенный размер шрифта */
+    }
+
+    #rules ol {
+        padding-left: 15px; /* Уменьшенный отступ */
+    }
+
+    #rules li {
+        font-size: 0.9em; /* Уменьшенный размер шрифта */
+    }
 }
 
-h1 {
-    margin-top: 10px;
-    font-size: 2em;
-    color: #2EA692;
-    font-weight: bold;
-}
+        #grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-template-rows: repeat(9, 1fr);
+            gap: 5px;
+            width: 90vw;
+            height: 60vh;
+            max-width: 800px;
+            max-height: 600px;
+            margin: 0 auto;
+        }
 
-/* Значок перезагрузки */
-#reload-icon {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    font-size: 1.5em;
-    color: #009078;
-    cursor: pointer;
-    z-index: 3;
-}
+        .cell {
+            background-color: #fff;
+            border: 2px solid #06DDBA;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1em;
+            color: #009078;
+            font-family: 'Press Start 2P', cursive;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            user-select: none;
+            aspect-ratio: 1;
+        }
 
-#reload-icon:hover {
-    color: #2EA692;
-}
+        .cell.taken-1 {
+            background-color: rgba(255, 107, 107, 0.5);
+            color: #888;
+        }
 
-/* Правила игры */
-#rules {
-    margin-top: 10px;
-    text-align: left;
-    max-width: 90%;
-    padding: 15px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+        .cell.taken-2 {
+            background-color: rgba(76, 175, 80, 0.5);
+            color: #888;
+        }
 
-#rules h2 {
-    font-size: 1.5em;
-    color: #2EA692;
-    margin-bottom: 10px;
-    font-weight: bold;
-}
+        /* Панель информации об игре */
+        #game-info {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+            color: #009078;
+        }
 
-#rules ol {
-    padding-left: 20px;
-}
+        .player-1 {
+            color: #FF6B6B;
+            font-weight: bold;
+        }
 
-#rules li {
-    margin-bottom: 5px;
-    color: #555;
-}
+        .player-2 {
+            color: #4CAF50;
+            font-weight: bold;
+        }
 
-/* Игровое поле */
-#game-container {
-    display: none;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    width: 100%;
-    max-width: 800px;
-    margin: 10px auto;
-    padding: 10px;
-    box-sizing: border-box;
-}
+        #player-1-divisor,
+        #player-2-divisor {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
 
-#grid {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: repeat(9, 1fr);
-    gap: 2px; /* Уменьшаем зазор между клетками */
-    width: 90vmin; /* Используем минимальное значение из ширины и высоты экрана */
-    height: 90vmin; /* Делаем поле квадратным */
-    max-width: 90vh; /* Ограничиваем максимальную ширину */
-    max-height: 90vw; /* Ограничиваем максимальную высоту */
-    margin: 0 auto; /* Центрируем поле */
-    background-color: #f0f0f0; /* Фон поля, если нужно */
-    border: 2px solid #06DDBA; /* Граница поля */
-    border-radius: 10px; /* Скругление углов */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Тень */
-    aspect-ratio: 12 / 9; /* Сохраняем пропорции поля (12x9) */
-}
+        /* Панель с таймером и числом */
+        #number-panel {
+            margin-top: 10px;
+            font-size: 1.2em;
+            color: #2EA692;
+            font-weight: bold;
+        }
 
-.cell {
-    background-color: #fff;
-    border: 2px solid #06DDBA;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1em;
-    color: #009078;
-    font-family: 'Press Start 2P', cursive;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    user-select: none;
-    aspect-ratio: 1; /* Сохраняем квадратную форму клеток */
-}
+        
+        /* Сообщение о результате игры */
+        #game-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #2EA692;
+            display: none;
+            z-index: 2;
+        }
 
-.cell.taken-1 {
-    background-color: rgba(255, 107, 107, 0.5);
-    color: #888;
-}
+        /* Кнопки */
+        button {
+            padding: 10px 20px;
+            font-size: 0.9em;
+            font-family: 'Nunito', sans-serif;
+            color: #fff;
+            background-color: #2EA692;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
 
-.cell.taken-2 {
-    background-color: rgba(76, 175, 80, 0.5);
-    color: #888;
-}
+        button:hover {
+            background-color: #009078;
+        }
 
-/* Панель информации об игре */
-#game-info {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-    margin-bottom: 10px;
-    font-size: 1.2em;
-    color: #009078;
-}
+        #mode-select {
+            margin-top: 10px;
+            display: flex;
+            gap: 10px;
+        }
 
-.player-1 {
-    color: #FF6B6B;
-    font-weight: bold;
-}
+        /* Иконка настроек */
+        #settings-icon {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            font-size: 1.5em;
+            color: #009078;
+            cursor: pointer;
+            display: none;
+            z-index: 3;
+        }
 
-.player-2 {
-    color: #4CAF50;
-    font-weight: bold;
-}
+        /* Модальное окно */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
 
-#player-1-divisor,
-#player-2-divisor {
-    font-weight: bold;
-    font-size: 1.1em;
-}
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 15px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 10px;
+        }
 
-/* Панель с таймером и числом */
-#number-panel {
-    margin-top: 10px;
-    font-size: 1.2em;
-    color: #2EA692;
-    font-weight: bold;
-}
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 24px;
+            font-weight: bold;
+        }
 
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Адаптация для маленьких экранов */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5em;
+            }
+
+            #rules h2 {
+                font-size: 1.2em;
+            }
+
+            #rules ol {
+                padding-left: 15px;
+            }
+
+            .cell {
+                font-size: 0.8em;
+            }
+
+            #game-info {
+                font-size: 1em;
+            }
+
+            #number-panel {
+                font-size: 1em;
+            }
+
+            #logo {
+                width: 80px; /* Уменьшаем размер логотипа на маленьких экранах */
+            }
+
+            #back-button {
+                font-size: 1em; /* Уменьшаем размер кнопки на маленьких экранах */
+                padding: 8px 16px;
+            }
+
+            #game-message {
+                font-size: 1em;
+                padding: 10px;
+            }
+
+            button {
+                padding: 8px 16px;
+                font-size: 0.8em;
+            }
+        
 /* Логотип и кнопка "Назад" */
 #logo {
     position: fixed;
@@ -177,146 +329,4 @@ h1 {
     padding: 10px 20px; /* Увеличиваем отступы */
     z-index: 1000;
 }
-
-/* Сообщение о результате игры */
-#game-message {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(255, 255, 255, 0.9);
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    font-size: 1.2em;
-    font-weight: bold;
-    color: #2EA692;
-    display: none;
-    z-index: 2;
-}
-
-/* Кнопки */
-button {
-    padding: 10px 20px;
-    font-size: 0.9em;
-    font-family: 'Nunito', sans-serif;
-    color: #fff;
-    background-color: #2EA692;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-button:hover {
-    background-color: #009078;
-}
-
-#mode-select {
-    margin-top: 10px;
-    display: flex;
-    gap: 10px;
-}
-
-/* Иконка настроек */
-#settings-icon {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    font-size: 1.5em;
-    color: #009078;
-    cursor: pointer;
-    display: none;
-    z-index: 3;
-}
-
-/* Модальное окно */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
-}
-
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 15px;
-    border: 1px solid #888;
-    width: 90%;
-    max-width: 500px;
-    border-radius: 10px;
-}
-
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 24px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-
-/* Адаптация для маленьких экранов */
-@media (max-width: 600px) {
-    h1 {
-        font-size: 1.5em;
-    }
-
-    #rules h2 {
-        font-size: 1.2em;
-    }
-
-    #rules ol {
-        padding-left: 15px;
-    }
-
-    .cell {
-        font-size: 0.8em;
-    }
-
-    #game-info {
-        font-size: 1em;
-    }
-
-    #number-panel {
-        font-size: 1em;
-    }
-
-    #logo {
-        width: 80px; /* Уменьшаем размер логотипа на маленьких экранах */
-    }
-
-    #back-button {
-        font-size: 1em; /* Уменьшаем размер кнопки на маленьких экранах */
-        padding: 8px 16px;
-    }
-
-    #game-message {
-        font-size: 1em;
-        padding: 10px;
-    }
-
-    button {
-        padding: 8px 16px;
-        font-size: 0.8em;
-    }
-
-    #grid {
-        width: 95vmin; /* Используем 95% минимального значения из ширины и высоты экрана */
-        height: 95vmin; /* Делаем поле квадратным */
-        max-width: 95vh; /* Ограничиваем максимальную ширину */
-        max-height: 95vw; /* Ограничиваем максимальную высоту */
-        gap: 1px; /* Уменьшаем зазор между клетками для мобильных устройств */
-    }
-}
+        }
