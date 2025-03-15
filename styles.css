@@ -1,4 +1,4 @@
-/* Общие стили */
+/* Основные стили */
 body {
     font-family: 'Nunito', sans-serif;
     background-color: #f0f0f0;
@@ -9,36 +9,49 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     min-height: 100vh;
     position: relative;
     overflow: hidden;
 }
 
 h1 {
-    margin-top: 20px;
-    font-size: 2.5em;
+    margin-top: 10px;
+    font-size: 2em;
     color: #2EA692;
     font-weight: bold;
 }
 
+/* Значок перезагрузки */
+#reload-icon {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    font-size: 1.5em;
+    color: #009078;
+    cursor: pointer;
+    z-index: 3;
+}
+
+#reload-icon:hover {
+    color: #2EA692;
+}
+
 /* Правила игры */
 #rules {
-    margin-top: 20px;
+    margin-top: 10px;
     text-align: left;
-    max-width: 600px;
-    padding: 20px;
+    max-width: 90%;
+    padding: 15px;
     background-color: #fff;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 #rules h2 {
-    font-size: 1.8em;
+    font-size: 1.5em;
     color: #2EA692;
     margin-bottom: 10px;
     font-weight: bold;
-    font-family: 'Nunito', sans-serif;
 }
 
 #rules ol {
@@ -48,15 +61,9 @@ h1 {
 #rules li {
     margin-bottom: 5px;
     color: #555;
-    font-family: 'Nunito', sans-serif;
 }
 
-#rules p {
-    color: #555;
-    font-family: 'Nunito', sans-serif;
-}
-
-/* Контейнер игры */
+/* Игровое поле */
 #game-container {
     display: none;
     flex-direction: column;
@@ -64,23 +71,22 @@ h1 {
     justify-content: center;
     position: relative;
     width: 100%;
-    height: 100%;
-}
-
-/* Игровое поле */
-#grid {
-    display: grid;
-    grid-template-columns: repeat(9, 1fr);
-    grid-template-rows: repeat(12, 1fr);
-    gap: 5px;
-    width: 90vw;
-    height: 90vh;
     max-width: 800px;
-    max-height: 1200px;
-    margin: 20px auto;
-    background-color: #f0f0f0;
+    margin: 10px auto;
     padding: 10px;
     box-sizing: border-box;
+}
+
+#grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(9, 1fr);
+    gap: 5px;
+    width: 90vw;
+    height: 60vh;
+    max-width: 800px;
+    max-height: 600px;
+    margin: 0 auto;
 }
 
 .cell {
@@ -90,12 +96,13 @@ h1 {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.2em;
+    font-size: 1em;
     color: #009078;
     font-family: 'Press Start 2P', cursive;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     user-select: none;
+    aspect-ratio: 1;
 }
 
 .cell.taken-1 {
@@ -112,36 +119,49 @@ h1 {
 #game-info {
     display: flex;
     justify-content: space-around;
-    width: 80%;
-    margin-bottom: 20px;
-    font-size: 1.1em;
+    width: 100%;
+    margin-bottom: 10px;
+    font-size: 1.2em;
     color: #009078;
 }
 
-#player-1-score,
-#player-2-score {
+.player-1 {
+    color: #FF6B6B;
     font-weight: bold;
+}
+
+.player-2 {
+    color: #4CAF50;
+    font-weight: bold;
+}
+
+#player-1-divisor,
+#player-2-divisor {
+    font-weight: bold;
+    font-size: 1.1em;
 }
 
 /* Панель с таймером и числом */
 #number-panel {
-    margin-top: 20px;
-    font-size: 1.3em;
+    margin-top: 10px;
+    font-size: 1.2em;
     color: #2EA692;
     font-weight: bold;
 }
 
-/* Сообщение игры */
+
+
+/* Сообщение о результате игры */
 #game-message {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background-color: rgba(255, 255, 255, 0.9);
-    padding: 20px;
+    padding: 15px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-    font-size: 1.5em;
+    font-size: 1.2em;
     font-weight: bold;
     color: #2EA692;
     display: none;
@@ -150,8 +170,8 @@ h1 {
 
 /* Кнопки */
 button {
-    padding: 12px 24px;
-    font-size: 1em;
+    padding: 10px 20px;
+    font-size: 0.9em;
     font-family: 'Nunito', sans-serif;
     color: #fff;
     background-color: #2EA692;
@@ -166,62 +186,200 @@ button:hover {
 }
 
 #mode-select {
-    margin-top: 20px;
+    margin-top: 10px;
     display: flex;
     gap: 10px;
 }
 
-/* Кнопка перезагрузки */
-#reload-button {
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    font-size: 1.2em;
-    cursor: pointer;
-    color: #009078;
-    background-color: #f0f0f0;
-    border: 1px solid #009078;
-    border-radius: 5px;
-    padding: 10px 20px;
-    z-index: 1000;
-}
-
-/* Кнопка информации */
-#info-button {
+/* Иконка настроек */
+#settings-icon {
     position: fixed;
     top: 10px;
     right: 10px;
-    font-size: 1.2em;
-    cursor: pointer;
+    font-size: 1.5em;
     color: #009078;
-    background-color: #f0f0f0;
-    border: 1px solid #009078;
-    border-radius: 5px;
-    padding: 10px 20px;
-    z-index: 1000;
+    cursor: pointer;
+    display: none;
+    z-index: 3;
 }
 
-/* Логотип */
+/* Модальное окно */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 15px;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 10px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+ /* Логотип */
 #logo {
     position: fixed;
-    left: 20px;
     bottom: 20px;
-    width: 100px;
+    left: 20px;
+    width: 150px; /* Увеличенный размер */
     height: auto;
     z-index: 1000;
+    cursor: pointer;
 }
+
+
 
 /* Кнопка "Назад" */
 #back-button {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    font-size: 1.2em;
+    font-size: 20px; /* Увеличенный размер */
     cursor: pointer;
-    color: #009078;
-    background-color: #f0f0f0;
-    border: 1px solid #009078;
+    color: #009078; /* Зеленый цвет */
+    background-color: #f0f0f0; /* Серый фон */
+    border: 1px solid #009078; /* Зеленая рамка */
     border-radius: 5px;
-    padding: 10px 20px;
+    padding: 10px 20px; /* Увеличенный размер */
     z-index: 1000;
+}
+
+/* Адаптация для телефонов */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 1.5em;
+    }
+
+    #reload-icon {
+        font-size: 1.2em;
+    }
+
+    #rules h2 {
+        font-size: 1.2em;
+    }
+
+    #rules li {
+        font-size: 0.9em;
+    }
+
+    #game-info {
+        font-size: 1em;
+    }
+
+    #number-panel {
+        font-size: 1em;
+    }
+
+    #grid {
+        grid-template-columns: repeat(12, 1fr);
+        grid-template-rows: repeat(9, 1fr);
+        gap: 3px;
+        width: 95vw;
+        height: 50vh;
+    }
+
+    .cell {
+        font-size: 0.8em;
+        border-width: 1px;
+    }
+
+    button {
+        padding: 8px 16px;
+        font-size: 0.8em;
+    }
+
+    #settings-icon {
+        font-size: 1.2em;
+    }
+
+    #logo {
+        width: 100px;
+    }
+
+    #back-button {
+        font-size: 16px;
+        padding: 8px 16px;
+    }
+}
+
+/* Адаптация для очень маленьких экранов */
+@media (max-width: 400px) {
+    h1 {
+        font-size: 1.2em;
+    }
+
+    #reload-icon {
+        font-size: 1em;
+    }
+
+    #rules h2 {
+        font-size: 1em;
+    }
+
+    #rules li {
+        font-size: 0.8em;
+    }
+
+    #game-info {
+        font-size: 0.9em;
+    }
+
+    #number-panel {
+        font-size: 0.9em;
+    }
+
+    #grid {
+        grid-template-columns: repeat(12, 1fr);
+        grid-template-rows: repeat(9, 1fr);
+        gap: 2px;
+        width: 98vw;
+        height: 45vh;
+    }
+
+    .cell {
+        font-size: 0.7em;
+        border-width: 1px;
+    }
+
+    button {
+        padding: 6px 12px;
+        font-size: 0.7em;
+    }
+
+    #settings-icon {
+        font-size: 1em;
+    }
+
+    #logo {
+        width: 80px;
+    }
+
+    #back-button {
+        font-size: 14px;
+        padding: 6px 12px;
+    }
 }
