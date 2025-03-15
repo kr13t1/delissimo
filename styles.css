@@ -149,14 +149,7 @@ h1 {
     font-weight: bold;
 }
 
-/* Логотип */
-#logo {
-    position: fixed;
-    left: 10px;
-    bottom: 10px;
-    width: 80px;
-    height: auto;
-}
+
 
 /* Сообщение о результате игры */
 #game-message {
@@ -247,20 +240,34 @@ button:hover {
     cursor: pointer;
 }
 
+ /* Логотип */
+#logo {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    width: 150px; /* Увеличенный размер */
+    height: auto;
+    z-index: 1000;
+    cursor: pointer;
+}
+
+
+
 /* Кнопка "Назад" */
 #back-button {
     position: fixed;
-    bottom: 10px;
-    right: 10px;
-    font-size: 16px;
+    bottom: 20px;
+    right: 20px;
+    font-size: 20px; /* Увеличенный размер */
     cursor: pointer;
-    color: #009078;
-    background-color: #f0f0f0;
-    border: 1px solid #009078;
+    color: #009078; /* Зеленый цвет */
+    background-color: #f0f0f0; /* Серый фон */
+    border: 1px solid #009078; /* Зеленая рамка */
     border-radius: 5px;
-    padding: 5px 10px;
+    padding: 10px 20px; /* Увеличенный размер */
     z-index: 1000;
 }
+
 
 /* Адаптация для маленьких экранов */
 @media (max-width: 600px) {
