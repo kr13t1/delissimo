@@ -1,58 +1,42 @@
-
-        /* Основные стили */
+/* Общие стили (включая стили из предыдущей игры) */
         body {
             font-family: 'Nunito', sans-serif;
             background-color: #f0f0f0;
             color: #333;
             text-align: center;
             margin: 0;
-            padding: 0;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
             position: relative;
-            overflow: hidden;
         }
 
         h1 {
-            margin-top: 10px;
-            font-size: 2em;
+            margin-top: 20px;
+            font-size: 2.5em;
             color: #2EA692;
             font-weight: bold;
         }
 
-        /* Значок перезагрузки */
-        #reload-icon {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            font-size: 1.5em;
-            color: #009078;
-            cursor: pointer;
-            z-index: 3;
-        }
-
-        #reload-icon:hover {
-            color: #2EA692;
-        }
-
         /* Правила игры */
         #rules {
-            margin-top: 10px;
+            margin-top: 20px;
             text-align: left;
-            max-width: 90%;
-            padding: 15px;
+            max-width: 600px;
+            padding: 20px;
             background-color: #fff;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
 
         #rules h2 {
-            font-size: 1.5em;
+            font-size: 1.8em;
             color: #2EA692;
             margin-bottom: 10px;
             font-weight: bold;
+            font-family: 'Nunito', sans-serif;
         }
 
         #rules ol {
@@ -62,137 +46,114 @@
         #rules li {
             margin-bottom: 5px;
             color: #555;
+            font-family: 'Nunito', sans-serif;
         }
 
-        /* Игровое поле */
+        #rules p {
+            color: #555;
+            font-family: 'Nunito', sans-serif;
+        }
+
         #game-container {
             display: none;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             position: relative;
-            width: 100%;
-            max-width: 800px;
-            margin: 10px auto;
-            padding: 10px;
-            box-sizing: border-box;
+            /* Расположение элементов относительно друг друга */
         }
-
-        
-/* Адаптация для маленьких экранов */
-@media (max-width: 600px) {
-    #rules {
-        padding: 8px; /* Еще меньше padding */
-        max-width: 95%; /* Блок занимает почти всю ширину */
-    }
-
-    #rules h2 {
-        font-size: 1.2em; /* Уменьшенный размер шрифта */
-    }
-
-    #rules ol {
-        padding-left: 15px; /* Уменьшенный отступ */
-    }
-
-    #rules li {
-        font-size: 0.9em; /* Уменьшенный размер шрифта */
-    }
-}
 
         #grid {
             display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            grid-template-rows: repeat(9, 1fr);
+            grid-template-columns: repeat(8, 1fr);
             gap: 5px;
-            width: 90vw;
-            height: 60vh;
-            max-width: 800px;
-            max-height: 600px;
-            margin: 0 auto;
+            max-width: 600px;
+            margin: 20px auto;
         }
 
         .cell {
             background-color: #fff;
             border: 2px solid #06DDBA;
             border-radius: 10px;
+            padding: 15px;
+            font-size: 1.2em;
+            color: #009078;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1em;
-            color: #009078;
             font-family: 'Press Start 2P', cursive;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             cursor: pointer;
             user-select: none;
-            aspect-ratio: 1;
         }
 
         .cell.taken-1 {
             background-color: rgba(255, 107, 107, 0.5);
+            /* Полупрозрачный красный */
             color: #888;
+            /* Более тусклый цвет текста */
         }
 
         .cell.taken-2 {
             background-color: rgba(76, 175, 80, 0.5);
+            /* Полупрозрачный зеленый */
             color: #888;
+            /* Более тусклый цвет текста */
         }
 
         /* Панель информации об игре */
         #game-info {
             display: flex;
             justify-content: space-around;
-            width: 100%;
-            margin-bottom: 10px;
-            font-size: 1.2em;
+            width: 80%;
+            margin-bottom: 20px;
+            font-size: 1.1em;
             color: #009078;
         }
 
-        .player-1 {
-            color: #FF6B6B;
+        #player-1-score,
+        #player-2-score {
             font-weight: bold;
-        }
-
-        .player-2 {
-            color: #4CAF50;
-            font-weight: bold;
-        }
-
-        #player-1-divisor,
-        #player-2-divisor {
-            font-weight: bold;
-            font-size: 1.1em;
         }
 
         /* Панель с таймером и числом */
         #number-panel {
-            margin-top: 10px;
-            font-size: 1.2em;
+            margin-top: 20px;
+            font-size: 1.3em;
             color: #2EA692;
             font-weight: bold;
         }
 
-        
-        /* Сообщение о результате игры */
+      
+
         #game-message {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             background-color: rgba(255, 255, 255, 0.9);
-            padding: 15px;
+            padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            font-size: 1.2em;
+            font-size: 1.5em;
             font-weight: bold;
             color: #2EA692;
             display: none;
             z-index: 2;
         }
 
+        /* Сетка */
+        #grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 10px;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+
         /* Кнопки */
         button {
-            padding: 10px 20px;
-            font-size: 0.9em;
+            padding: 12px 24px;
+            font-size: 1em;
             font-family: 'Nunito', sans-serif;
             color: #fff;
             background-color: #2EA692;
@@ -207,7 +168,7 @@
         }
 
         #mode-select {
-            margin-top: 10px;
+            margin-top: 20px;
             display: flex;
             gap: 10px;
         }
@@ -217,7 +178,7 @@
             position: fixed;
             top: 10px;
             right: 10px;
-            font-size: 1.5em;
+            font-size: 2em;
             color: #009078;
             cursor: pointer;
             display: none;
@@ -240,17 +201,16 @@
         .modal-content {
             background-color: #fefefe;
             margin: 15% auto;
-            padding: 15px;
+            padding: 20px;
             border: 1px solid #888;
-            width: 90%;
-            max-width: 500px;
+            width: 80%;
             border-radius: 10px;
         }
 
         .close {
             color: #aaa;
             float: right;
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
         }
 
@@ -260,52 +220,6 @@
             text-decoration: none;
             cursor: pointer;
         }
-
-        /* Адаптация для маленьких экранов */
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 1.5em;
-            }
-
-            #rules h2 {
-                font-size: 1.2em;
-            }
-
-            #rules ol {
-                padding-left: 15px;
-            }
-
-            .cell {
-                font-size: 0.8em;
-            }
-
-            #game-info {
-                font-size: 1em;
-            }
-
-            #number-panel {
-                font-size: 1em;
-            }
-
-            #logo {
-                width: 80px; /* Уменьшаем размер логотипа на маленьких экранах */
-            }
-
-            #back-button {
-                font-size: 1em; /* Уменьшаем размер кнопки на маленьких экранах */
-                padding: 8px 16px;
-            }
-
-            #game-message {
-                font-size: 1em;
-                padding: 10px;
-            }
-
-            button {
-                padding: 8px 16px;
-                font-size: 0.8em;
-            }
-        
 /* Логотип и кнопка "Назад" */
 #logo {
     position: fixed;
@@ -329,4 +243,3 @@
     padding: 10px 20px; /* Увеличиваем отступы */
     z-index: 1000;
 }
-        }
