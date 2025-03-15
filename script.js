@@ -97,21 +97,27 @@ function handleCellClick(index) {
 // ИИ
 function aiMove() {
     if (!gameActive) return;
-    const available = board.reduce((acc, cell, index) => (cell === 0 ? [...acc, index] : acc), []);
-    const aiChoices = available
-        .map((index) => (numbers[index] % player2Divisor === 0 ? { cell: index, value: numbers[index] } : null))
-        .filter((choice) => choice !== null)
-        .sort((a, b) => b.value - a.value);
 
-    if (aiChoices.length > 0) {
-        const bestChoice = aiChoices[0].cell;
-        board[bestChoice] = 2;
-        const cellValue = numbers[bestChoice];
-        player2Score += cellValue;
-        player2ScoreDisplay.textContent = player2Score;
-        const cell = document.querySelector(`[data-index="${bestChoice}"]`);
-        cell.classList.add('taken-2');
-    }
+    setTimeout(() => {
+        const available = board.reduce((acc, cell, index) => (cell === 0 ? [...acc, index] : acc), []);
+        const aiChoices = available
+            .map((index) => (numbers[index] % player2Divisor === 0 ? { cell: index, value: numbers[index] } : null))
+            .filter((choice) => choice !== null)
+            .sort((a, b) => b.value - a.value);
+
+        if (aiChoices.length > 0) {
+            // Выбираем случайный ход из топ-3 лучших вариантов
+            const randomIndex = Math.floor(Math.random() * Math.min(3, aiChoices.length));
+            const bestChoice = aiChoices[randomIndex].cell;
+
+            board[bestChoice] = 2;
+            const cellValue = numbers[bestChoice];
+            player2Score += cellValue;
+            player2ScoreDisplay.textContent = player2Score;
+            const cell = document.querySelector(`[data-index="${bestChoice}"]`);
+            cell.classList.add('taken-2');
+        }
+    }, 1000); // Задержка в 1 секунду
 }
 
 // Функция смены хода игрока
