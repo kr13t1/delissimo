@@ -37,7 +37,7 @@ function getRandomDivisor() {
 
 // Функция генерации случайного числа от 1 до 100
 function getRandomNumber() {
-    return Math.floor(Math.random() * 100) + 1;
+    return Math.floor(Math.random() * 99) + 1;
 }
 
 // Функция создания игрового поля
