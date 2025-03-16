@@ -46,7 +46,13 @@ function createGrid() {
     numbers = [];
     board = [];
 
-    // Функция для вычисления суммы чисел, делящихся на определенное число
+    // Генерация случайных делителей для игроков
+    const player1Divisor = Math.floor(Math.random() * 8) + 2; // Случайное число от 2 до 9
+    const player2Divisor = Math.floor(Math.random() * 8) + 2; // Случайное число от 2 до 9
+
+    console.log(`Player 1 Divisor: ${player1Divisor}, Player 2 Divisor: ${player2Divisor}`);
+
+    // Функция для вычисления суммы чисел, делящихся на определенный делитель
     function getSumDivisibleBy(divisor) {
         return numbers.reduce((sum, num) => num % divisor === 0 ? sum + num : sum, 0);
     }
@@ -61,25 +67,13 @@ function createGrid() {
             numbers.push(getRandomNumber());
         }
 
-        // Проверка на равенство сумм для делителей от 2 до 9
-        let sumsEqual = true;
-        for (let divisor = 2; divisor <= 9; divisor++) {
-            const sum = getSumDivisibleBy(divisor);
-            if (sum === 0) {
-                sumsEqual = false;
-                break;
-            }
-            if (divisor > 2) {
-                const prevSum = getSumDivisibleBy(divisor - 1);
-                if (Math.abs(sum - prevSum) > 20) {
-                    sumsEqual = false;
-                    break;
-                }
-            }
-        }
+        // Вычисляем суммы для делителей игроков
+        const sumPlayer1 = getSumDivisibleBy(player1Divisor);
+        const sumPlayer2 = getSumDivisibleBy(player2Divisor);
 
-        if (sumsEqual) {
-            break;
+        // Проверяем, что разница между суммами не превышает 20
+        if (Math.abs(sumPlayer1 - sumPlayer2) <= 20) {
+            break; // Условие выполнено, выходим из цикла
         }
 
         attempts++;
@@ -104,7 +98,6 @@ function createGrid() {
         grid.appendChild(cell);
     }
 }
-
 // Функция обработки клика по ячейке
 function handleCellClick(index) {
     if (!gameActive) return;
