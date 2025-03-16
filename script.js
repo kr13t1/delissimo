@@ -42,6 +42,8 @@ function getRandomNumber() {
 
 // Функция создания игрового поля
 function createGrid() {
+// Функция создания игрового поля
+function createGrid() {
     grid.innerHTML = '';
     numbers = [];
     board = [];
@@ -62,38 +64,8 @@ function createGrid() {
         return numbers.reduce((sum, num) => num % divisor === 0 ? sum + num : sum, 0);
     }
 
-    // Генерация чисел с учетом делителей
-    let attempts = 0;
-    const maxAttempts = 1000; // Максимальное количество попыток
-
-    while (attempts < maxAttempts) {
-        numbers = [];
-        for (let i = 0; i < 108; i++) {
-            // С большей вероятностью генерируем числа, которые делятся на один из делителей
-            if (Math.random() < 0.5) {
-                numbers.push((Math.floor(Math.random() * 99) + 1) * player1Divisor);
-            } else if (Math.random() < 0.5) {
-                numbers.push((Math.floor(Math.random() * 99) + 1) * player2Divisor);
-            } else {
-                numbers.push(getRandomNumber());
-            }
-        }
-
-        // Вычисляем суммы для делителей игроков
-        const sumPlayer1 = getSumDivisibleBy(player1Divisor);
-        const sumPlayer2 = getSumDivisibleBy(player2Divisor);
-
-        // Проверяем, что разница между суммами не превышает 20
-        if (Math.abs(sumPlayer1 - sumPlayer2) <= 20) {
-            break; // Условие выполнено, выходим из цикла
-        }
-
-        attempts++;
-    }
-
-    if (attempts >= maxAttempts) {
-        console.warn("Не удалось достичь примерного равенства сумм за максимальное количество попыток.");
-    }
+    // Генерация чисел с гарантированным балансом
+    numbers = generateBalancedNumbers(player1Divisor, player2Divisor);
 
     // Создание игрового поля
     for (let i = 0; i < 108; i++) {
@@ -110,6 +82,72 @@ function createGrid() {
         grid.appendChild(cell);
     }
 }
+
+// Функция для генерации сбалансированных чисел
+function generateBalancedNumbers(divisor1, divisor2) {
+    const numbers = [];
+    const lcm = getLCM(divisor1, divisor2); // Наименьшее общее кратное
+
+    // Генерация чисел, которые делятся на оба делителя
+    const commonNumbers = [];
+    for (let i = 0; i < 20; i++) { // 20 чисел, делящихся на оба делителя
+        const num = lcm * (Math.floor(Math.random() * 10) + 1); // Числа от lcm до 10*lcm
+        commonNumbers.push(num);
+    }
+
+    // Генерация чисел, которые делятся только на divisor1
+    const player1Numbers = [];
+    for (let i = 0; i < 30; i++) { // 30 чисел, делящихся только на divisor1
+        let num;
+        do {
+            num = divisor1 * (Math.floor(Math.random() * 50) + 1); // Числа от divisor1 до 50*divisor1
+        } while (num % divisor2 === 0); // Убедимся, что число не делится на divisor2
+        player1Numbers.push(num);
+    }
+
+    // Генерация чисел, которые делятся только на divisor2
+    const player2Numbers = [];
+    for (let i = 0; i < 30; i++) { // 30 чисел, делящихся только на divisor2
+        let num;
+        do {
+            num = divisor2 * (Math.floor(Math.random() * 50) + 1); // Числа от divisor2 до 50*divisor2
+        } while (num % divisor1 === 0); // Убедимся, что число не делится на divisor1
+        player2Numbers.push(num);
+    }
+
+    // Генерация случайных чисел, которые не делятся ни на один из делителей
+    const neutralNumbers = [];
+    for (let i = 0; i < 28; i++) { // 28 нейтральных чисел
+        let num;
+        do {
+            num = Math.floor(Math.random() * 99) + 1; // Числа от 1 до 99
+        } while (num % divisor1 === 0 || num % divisor2 === 0); // Убедимся, что число не делится на делители
+        neutralNumbers.push(num);
+    }
+
+    // Собираем все числа в один массив
+    const allNumbers = [...commonNumbers, ...player1Numbers, ...player2Numbers, ...neutralNumbers];
+
+    // Перемешиваем массив
+    for (let i = allNumbers.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [allNumbers[i], allNumbers[j]] = [allNumbers[j], allNumbers[i]];
+    }
+
+    return allNumbers;
+}
+
+// Функция для вычисления наименьшего общего кратного (НОК)
+function getLCM(a, b) {
+    return (a * b) / getGCD(a, b);
+}
+
+// Функция для вычисления наибольшего общего делителя (НОД)
+function getGCD(a, b) {
+    if (b === 0) return a;
+    return getGCD(b, a % b);
+}
+    
 // Функция обработки клика по ячейке
 function handleCellClick(index) {
     if (!gameActive) return;
