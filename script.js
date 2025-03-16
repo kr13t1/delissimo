@@ -32,7 +32,7 @@ let currentPlayer = "player1";
 
 // Функция генерации случайного числа (делителя)
 function getRandomDivisor() {
-    return Math.floor(Math.random() * 8) + 2; // Числа от 2 до 10
+    return Math.floor(Math.random() * 9) + 2; // Числа от 2 до 10
 }
 
 // Функция генерации случайного числа от 1 до 100
@@ -40,43 +40,25 @@ function getRandomNumber() {
     return Math.floor(Math.random() * 99) + 1;
 }
 
-// Функция создания игрового поля с балансом чисел
+// Функция создания игрового поля
 function createGrid() {
     grid.innerHTML = '';
     numbers = [];
     board = [];
 
-    let sumPlayer1 = 0;
-    let sumPlayer2 = 0;
+    for (let i = 0; i < 108; i++) { // 9x12 = 108 ячеек
+        const randomNumber = getRandomNumber();
+        numbers.push(randomNumber);
+        board.push(0); // 0 = не занято, 1 = занято игроком 1, 2 = занято игроком 2
 
-    // Генерация чисел с балансом
-    while (Math.abs(sumPlayer1 - sumPlayer2) > 20) {
-        numbers = [];
-        sumPlayer1 = 0;
-        sumPlayer2 = 0;
-
-        for (let i = 0; i < 108; i++) {
-            const randomNumber = getRandomNumber();
-            numbers.push(randomNumber);
-            board.push(0);
-
-            if (randomNumber % player1Divisor === 0) {
-                sumPlayer1 += randomNumber;
-            }
-            if (randomNumber % player2Divisor === 0) {
-                sumPlayer2 += randomNumber;
-            }
-        }
-    }
-
-    // Создание ячеек
-    for (let i = 0; i < 108; i++) {
         const cell = document.createElement('div');
         cell.className = 'cell';
-        cell.textContent = numbers[i];
+        cell.textContent = randomNumber;
         cell.dataset.index = i;
 
+        // Обработчик клика по ячейке
         cell.addEventListener('click', () => handleCellClick(i));
+
         grid.appendChild(cell);
     }
 }
