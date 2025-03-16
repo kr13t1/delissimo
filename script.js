@@ -32,7 +32,7 @@ let currentPlayer = "player1";
 
 // Функция генерации случайного числа (делителя)
 function getRandomDivisor() {
-    return Math.floor(Math.random() * 9) + 2; // Числа от 2 до 10
+    return Math.floor(Math.random() * 8) + 2; // Числа от 2 до 10
 }
 
 // Функция генерации случайного числа от 1 до 100
@@ -46,14 +46,56 @@ function createGrid() {
     numbers = [];
     board = [];
 
-    for (let i = 0; i < 108; i++) { // 9x12 = 108 ячеек
-        const randomNumber = getRandomNumber();
-        numbers.push(randomNumber);
+    // Функция для вычисления суммы чисел, делящихся на определенное число
+    function getSumDivisibleBy(divisor) {
+        return numbers.reduce((sum, num) => num % divisor === 0 ? sum + num : sum, 0);
+    }
+
+    // Генерация чисел с проверкой на равенство сумм
+    let attempts = 0;
+    const maxAttempts = 1000; // Максимальное количество попыток
+
+    while (attempts < maxAttempts) {
+        numbers = [];
+        for (let i = 0; i < 108; i++) {
+            numbers.push(getRandomNumber());
+        }
+
+        // Проверка на равенство сумм для делителей от 2 до 9
+        let sumsEqual = true;
+        for (let divisor = 2; divisor <= 9; divisor++) {
+            const sum = getSumDivisibleBy(divisor);
+            if (sum === 0) {
+                sumsEqual = false;
+                break;
+            }
+            if (divisor > 2) {
+                const prevSum = getSumDivisibleBy(divisor - 1);
+                if (Math.abs(sum - prevSum) > 20) {
+                    sumsEqual = false;
+                    break;
+                }
+            }
+        }
+
+        if (sumsEqual) {
+            break;
+        }
+
+        attempts++;
+    }
+
+    if (attempts >= maxAttempts) {
+        console.warn("Не удалось достичь примерного равенства сумм за максимальное количество попыток.");
+    }
+
+    // Создание игрового поля
+    for (let i = 0; i < 108; i++) {
         board.push(0); // 0 = не занято, 1 = занято игроком 1, 2 = занято игроком 2
 
         const cell = document.createElement('div');
         cell.className = 'cell';
-        cell.textContent = randomNumber;
+        cell.textContent = numbers[i];
         cell.dataset.index = i;
 
         // Обработчик клика по ячейке
