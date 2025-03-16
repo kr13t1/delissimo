@@ -94,21 +94,22 @@ function handleCellClick(index) {
     }
 }
 
-// ИИ (теперь выбирает случайную ячейку)
+// ИИ
 function aiMove() {
     if (!gameActive) return;
     const available = board.reduce((acc, cell, index) => (cell === 0 ? [...acc, index] : acc), []);
     const aiChoices = available
         .map((index) => (numbers[index] % player2Divisor === 0 ? { cell: index, value: numbers[index] } : null))
-        .filter((choice) => choice !== null);
+        .filter((choice) => choice !== null)
+        .sort((a, b) => b.value - a.value);
 
     if (aiChoices.length > 0) {
-        const randomChoice = aiChoices[Math.floor(Math.random() * aiChoices.length)].cell;
-        board[randomChoice] = 2;
-        const cellValue = numbers[randomChoice];
+        const bestChoice = aiChoices[0].cell;
+        board[bestChoice] = 2;
+        const cellValue = numbers[bestChoice];
         player2Score += cellValue;
         player2ScoreDisplay.textContent = player2Score;
-        const cell = document.querySelector(`[data-index="${randomChoice}"]`);
+        const cell = document.querySelector(`[data-index="${bestChoice}"]`);
         cell.classList.add('taken-2');
     }
 }
