@@ -30,9 +30,12 @@ let timerInterval;
 let aiMode = false;
 let currentPlayer = "player1";
 
-// Функция генерации случайного числа (делителя)
+// Допустимые делители
+const allowedDivisors = [3, 4, 6, 7, 8];
+
+// Функция генерации случайного делителя
 function getRandomDivisor() {
-    return Math.floor(Math.random() * 9) + 2; // Числа от 2 до 10
+    return allowedDivisors[Math.floor(Math.random() * allowedDivisors.length)];
 }
 
 // Функция генерации случайного числа от 1 до 100
@@ -40,7 +43,6 @@ function getRandomNumber() {
     return Math.floor(Math.random() * 99) + 1;
 }
 
-// Функция создания игрового поля
 // Функция создания игрового поля с балансировкой
 function createGrid() {
     grid.innerHTML = '';
@@ -56,9 +58,9 @@ function createGrid() {
         do {
             randomNumber = getRandomNumber();
         } while (
-            // Проверяем, чтобы числа равномерно распределялись между делителями
+            // Проверяем, чтобы суммы чисел, делящихся на делители, были примерно равны
             Math.abs((player1Sum + (randomNumber % player1Divisor === 0 ? randomNumber : 0)) -
-                     (player2Sum + (randomNumber % player2Divisor === 0 ? randomNumber : 0))) > 10
+                     (player2Sum + (randomNumber % player2Divisor === 0 ? randomNumber : 0))) > 50
         );
 
         numbers.push(randomNumber);
@@ -83,7 +85,6 @@ function createGrid() {
         grid.appendChild(cell);
     }
 }
-
 
 // Функция обработки клика по ячейке
 function handleCellClick(index) {
