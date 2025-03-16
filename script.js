@@ -32,7 +32,7 @@ let currentPlayer = "player1";
 
 // Функция генерации случайного числа (делителя)
 function getRandomDivisor() {
-    return Math.floor(Math.random() * 8) + 2; // Числа от 2 до 10
+    return Math.floor(Math.random() * 9) + 2; // Числа от 2 до 10
 }
 
 // Функция генерации случайного числа от 1 до 100
@@ -41,38 +41,40 @@ function getRandomNumber() {
 }
 
 // Функция создания игрового поля
-
+// Функция создания игрового поля с балансировкой
 function createGrid() {
     grid.innerHTML = '';
     numbers = [];
     board = [];
 
-    // Генерация делителей для игроков
-    player1Divisor = getRandomDivisor();
-    player2Divisor = getRandomDivisor();
+    // Генерация сбалансированного набора чисел
+    let player1Sum = 0;
+    let player2Sum = 0;
 
-    // Убедимся, что делители разные
-    while (player1Divisor === player2Divisor) {
-        player2Divisor = getRandomDivisor();
-    }
+    for (let i = 0; i < 108; i++) { // 9x12 = 108 ячеек
+        let randomNumber;
+        do {
+            randomNumber = getRandomNumber();
+        } while (
+            // Проверяем, чтобы числа равномерно распределялись между делителями
+            Math.abs((player1Sum + (randomNumber % player1Divisor === 0 ? randomNumber : 0)) -
+                     (player2Sum + (randomNumber % player2Divisor === 0 ? randomNumber : 0))) > 10
+        );
 
-    console.log(`Player 1 Divisor: ${player1Divisor}, Player 2 Divisor: ${player2Divisor}`);
-
-    // Функция для вычисления суммы чисел, делящихся на определенный делитель
-    function getSumDivisibleBy(divisor) {
-        return numbers.reduce((sum, num) => num % divisor === 0 ? sum + num : sum, 0);
-    }
-
-    // Генерация чисел с гарантированным балансом
-    numbers = generateBalancedNumbers(player1Divisor, player2Divisor);
-
-    // Создание игрового поля
-    for (let i = 0; i < 108; i++) {
+        numbers.push(randomNumber);
         board.push(0); // 0 = не занято, 1 = занято игроком 1, 2 = занято игроком 2
+
+        // Обновляем суммы для контроля баланса
+        if (randomNumber % player1Divisor === 0) {
+            player1Sum += randomNumber;
+        }
+        if (randomNumber % player2Divisor === 0) {
+            player2Sum += randomNumber;
+        }
 
         const cell = document.createElement('div');
         cell.className = 'cell';
-        cell.textContent = numbers[i];
+        cell.textContent = randomNumber;
         cell.dataset.index = i;
 
         // Обработчик клика по ячейке
@@ -82,71 +84,7 @@ function createGrid() {
     }
 }
 
-// Функция для генерации сбалансированных чисел
-function generateBalancedNumbers(divisor1, divisor2) {
-    const numbers = [];
-    const lcm = getLCM(divisor1, divisor2); // Наименьшее общее кратное
 
-    // Генерация чисел, которые делятся на оба делителя
-    const commonNumbers = [];
-    for (let i = 0; i < 20; i++) { // 20 чисел, делящихся на оба делителя
-        const num = lcm * (Math.floor(Math.random() * 10) + 1); // Числа от lcm до 10*lcm
-        commonNumbers.push(num);
-    }
-
-    // Генерация чисел, которые делятся только на divisor1
-    const player1Numbers = [];
-    for (let i = 0; i < 30; i++) { // 30 чисел, делящихся только на divisor1
-        let num;
-        do {
-            num = divisor1 * (Math.floor(Math.random() * 50) + 1); // Числа от divisor1 до 50*divisor1
-        } while (num % divisor2 === 0); // Убедимся, что число не делится на divisor2
-        player1Numbers.push(num);
-    }
-
-    // Генерация чисел, которые делятся только на divisor2
-    const player2Numbers = [];
-    for (let i = 0; i < 30; i++) { // 30 чисел, делящихся только на divisor2
-        let num;
-        do {
-            num = divisor2 * (Math.floor(Math.random() * 50) + 1); // Числа от divisor2 до 50*divisor2
-        } while (num % divisor1 === 0); // Убедимся, что число не делится на divisor1
-        player2Numbers.push(num);
-    }
-
-    // Генерация случайных чисел, которые не делятся ни на один из делителей
-    const neutralNumbers = [];
-    for (let i = 0; i < 28; i++) { // 28 нейтральных чисел
-        let num;
-        do {
-            num = Math.floor(Math.random() * 99) + 1; // Числа от 1 до 99
-        } while (num % divisor1 === 0 || num % divisor2 === 0); // Убедимся, что число не делится на делители
-        neutralNumbers.push(num);
-    }
-
-    // Собираем все числа в один массив
-    const allNumbers = [...commonNumbers, ...player1Numbers, ...player2Numbers, ...neutralNumbers];
-
-    // Перемешиваем массив
-    for (let i = allNumbers.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [allNumbers[i], allNumbers[j]] = [allNumbers[j], allNumbers[i]];
-    }
-
-    return allNumbers;
-}
-
-// Функция для вычисления наименьшего общего кратного (НОК)
-function getLCM(a, b) {
-    return (a * b) / getGCD(a, b);
-}
-
-// Функция для вычисления наибольшего общего делителя (НОД)
-function getGCD(a, b) {
-    if (b === 0) return a;
-    return getGCD(b, a % b);
-}
-    
 // Функция обработки клика по ячейке
 function handleCellClick(index) {
     if (!gameActive) return;
