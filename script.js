@@ -41,11 +41,20 @@ function getRandomNumber() {
 }
 
 // Функция создания игрового поля
+// Функция создания игрового поля
 function createGrid() {
     grid.innerHTML = '';
     numbers = [];
     board = [];
 
+    // Генерация делителей для игроков
+    player1Divisor = getRandomDivisor();
+    player2Divisor = getRandomDivisor();
+
+    // Убедимся, что делители разные
+    while (player1Divisor === player2Divisor) {
+        player2Divisor = getRandomDivisor();
+    }
 
     console.log(`Player 1 Divisor: ${player1Divisor}, Player 2 Divisor: ${player2Divisor}`);
 
