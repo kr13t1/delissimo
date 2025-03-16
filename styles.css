@@ -329,32 +329,4 @@
             padding: 10px 20px; /* Увеличиваем отступы */
             z-index: 1000;
         }
-/* Адаптация для iPhone */
-@media only screen and (max-width: 600px) {
-    .cell {
-        width: 30px;
-        height: 30px;
-        font-size: 14px;
-    }
 
-    #grid {
-        grid-template-columns: repeat(9, 1fr);
-        gap: 5px;
-    }
-
-    #game-container {
-        padding: 10px;
-    }
-
-    #player-1-score, #player-2-score, #player-1-divisor, #player-2-divisor {
-        font-size: 16px;
-    }
-
-    #timer {
-        font-size: 18px;
-    }
-
-    #game-message {
-        font-size: 20px;
-    }
-}
