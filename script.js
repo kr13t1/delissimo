@@ -50,30 +50,46 @@ function createGrid() {
     board = [];
 
     // Генерация сбалансированного набора чисел
+// Функция создания игрового поля с балансировкой по сумме чисел
+function createGrid() {
+    grid.innerHTML = '';
+    numbers = [];
+    board = [];
+
+    // Переменные для контроля суммы чисел, делящихся на делители
     let player1Sum = 0;
     let player2Sum = 0;
 
+    // Генерация чисел с балансировкой
     for (let i = 0; i < 108; i++) { // 9x12 = 108 ячеек
         let randomNumber;
+        let attempts = 0; // Счетчик попыток для избежания зацикливания
+
         do {
             randomNumber = getRandomNumber();
-        } while (
-            // Проверяем, чтобы суммы чисел, делящихся на делители, были примерно равны
-            Math.abs((player1Sum + (randomNumber % player1Divisor === 0 ? randomNumber : 0)) -
-                     (player2Sum + (randomNumber % player2Divisor === 0 ? randomNumber : 0))) > 50
-        );
+            attempts++;
 
+            // Проверяем, как число влияет на баланс
+            const newPlayer1Sum = player1Sum + (randomNumber % player1Divisor === 0 ? randomNumber : 0);
+            const newPlayer2Sum = player2Sum + (randomNumber % player2Divisor === 0 ? randomNumber : 0);
+
+            // Если разница между суммами превышает 50, генерируем новое число
+            if (Math.abs(newPlayer1Sum - newPlayer2Sum) > 50 && attempts < 100) {
+                continue; // Пробуем снова
+            }
+
+            // Если баланс достигнут или попытки закончились, принимаем число
+            player1Sum = newPlayer1Sum;
+            player2Sum = newPlayer2Sum;
+            break;
+
+        } while (true);
+
+        // Добавляем число в поле
         numbers.push(randomNumber);
         board.push(0); // 0 = не занято, 1 = занято игроком 1, 2 = занято игроком 2
 
-        // Обновляем суммы для контроля баланса
-        if (randomNumber % player1Divisor === 0) {
-            player1Sum += randomNumber;
-        }
-        if (randomNumber % player2Divisor === 0) {
-            player2Sum += randomNumber;
-        }
-
+        // Создаем ячейку
         const cell = document.createElement('div');
         cell.className = 'cell';
         cell.textContent = randomNumber;
@@ -84,8 +100,10 @@ function createGrid() {
 
         grid.appendChild(cell);
     }
-}
 
+    console.log(`Сумма для делителя ${player1Divisor}: ${player1Sum}`);
+    console.log(`Сумма для делителя ${player2Divisor}: ${player2Sum}`);
+}
 // Функция обработки клика по ячейке
 function handleCellClick(index) {
     if (!gameActive) return;
