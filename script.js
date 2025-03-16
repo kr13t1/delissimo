@@ -44,55 +44,51 @@ function getRandomNumber() {
 }
 
 // Функция создания игрового поля с балансировкой по сумме чисел
+// Функция создания игрового поля с балансировкой по итоговой сумме
 function createGrid() {
-    grid.innerHTML = '';
-    numbers = [];
-    board = [];
+    let player1Sum, player2Sum;
+    let attempts = 0; // Счетчик попыток для избежания бесконечного цикла
 
-    // Переменные для контроля суммы чисел, делящихся на делители
-    let player1Sum = 0;
-    let player2Sum = 0;
+    do {
+        grid.innerHTML = '';
+        numbers = [];
+        board = [];
+        player1Sum = 0;
+        player2Sum = 0;
 
-    // Генерация чисел с балансировкой
-    for (let i = 0; i < 108; i++) { // 9x12 = 108 ячеек
-        let randomNumber;
-        let attempts = 0; // Счетчик попыток для избежания зацикливания
+        // Генерация чисел для поля
+        for (let i = 0; i < 108; i++) { // 9x12 = 108 ячеек
+            const randomNumber = getRandomNumber();
+            numbers.push(randomNumber);
+            board.push(0); // 0 = не занято, 1 = занято игроком 1, 2 = занято игроком 2
 
-        do {
-            randomNumber = getRandomNumber();
-            attempts++;
-
-            // Временные переменные для проверки баланса
-            const tempPlayer1Sum = player1Sum + (randomNumber % player1Divisor === 0 ? randomNumber : 0);
-            const tempPlayer2Sum = player2Sum + (randomNumber % player2Divisor === 0 ? randomNumber : 0);
-
-            // Если разница между суммами превышает 50, генерируем новое число
-            if (Math.abs(tempPlayer1Sum - tempPlayer2Sum) > 50 && attempts < 100) {
-                continue; // Пробуем снова
+            // Обновляем суммы для контроля баланса
+            if (randomNumber % player1Divisor === 0) {
+                player1Sum += randomNumber;
+            }
+            if (randomNumber % player2Divisor === 0) {
+                player2Sum += randomNumber;
             }
 
-            // Если баланс достигнут или попытки закончились, принимаем число
-            player1Sum = tempPlayer1Sum;
-            player2Sum = tempPlayer2Sum;
-            break;
+            // Создаем ячейку
+            const cell = document.createElement('div');
+            cell.className = 'cell';
+            cell.textContent = randomNumber;
+            cell.dataset.index = i;
 
-        } while (true);
+            // Обработчик клика по ячейке
+            cell.addEventListener('click', () => handleCellClick(i));
 
-        // Добавляем число в поле
-        numbers.push(randomNumber);
-        board.push(0); // 0 = не занято, 1 = занято игроком 1, 2 = занято игроком 2
+            grid.appendChild(cell);
+        }
 
-        // Создаем ячейку
-        const cell = document.createElement('div');
-        cell.className = 'cell';
-        cell.textContent = randomNumber;
-        cell.dataset.index = i;
+        attempts++;
+        if (attempts > 100) {
+            console.warn("Не удалось сбалансировать поле после 100 попыток. Разница:", Math.abs(player1Sum - player2Sum));
+            break; // Прерываем цикл, чтобы избежать бесконечного зацикливания
+        }
 
-        // Обработчик клика по ячейке
-        cell.addEventListener('click', () => handleCellClick(i));
-
-        grid.appendChild(cell);
-    }
+    } while (Math.abs(player1Sum - player2Sum) > 50); // Повторяем, пока разница не станет <= 50
 
     console.log(`Сумма для делителя ${player1Divisor}: ${player1Sum}`);
     console.log(`Сумма для делителя ${player2Divisor}: ${player2Sum}`);
