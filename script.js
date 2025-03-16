@@ -41,7 +41,6 @@ function getRandomNumber() {
 }
 
 // Функция создания игрового поля
-// Функция создания игрового поля
 function createGrid() {
     grid.innerHTML = '';
     numbers = [];
@@ -63,14 +62,21 @@ function createGrid() {
         return numbers.reduce((sum, num) => num % divisor === 0 ? sum + num : sum, 0);
     }
 
-    // Генерация чисел с проверкой на равенство сумм
+    // Генерация чисел с учетом делителей
     let attempts = 0;
     const maxAttempts = 1000; // Максимальное количество попыток
 
     while (attempts < maxAttempts) {
         numbers = [];
         for (let i = 0; i < 108; i++) {
-            numbers.push(getRandomNumber());
+            // С большей вероятностью генерируем числа, которые делятся на один из делителей
+            if (Math.random() < 0.5) {
+                numbers.push((Math.floor(Math.random() * 99) + 1) * player1Divisor);
+            } else if (Math.random() < 0.5) {
+                numbers.push((Math.floor(Math.random() * 99) + 1) * player2Divisor);
+            } else {
+                numbers.push(getRandomNumber());
+            }
         }
 
         // Вычисляем суммы для делителей игроков
