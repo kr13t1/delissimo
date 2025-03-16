@@ -83,12 +83,12 @@ function createGrid() {
         }
 
         attempts++;
-        if (attempts > 100) {
+        if (attempts > 150) {
             console.warn("Не удалось сбалансировать поле после 100 попыток. Разница:", Math.abs(player1Sum - player2Sum));
             break; // Прерываем цикл, чтобы избежать бесконечного зацикливания
         }
 
-    } while (Math.abs(player1Sum - player2Sum) > 50); // Повторяем, пока разница не станет <= 50
+    } while (Math.abs(player1Sum - player2Sum) > 70); // Повторяем, пока разница не станет <= 50
 
     console.log(`Сумма для делителя ${player1Divisor}: ${player1Sum}`);
     console.log(`Сумма для делителя ${player2Divisor}: ${player2Sum}`);
@@ -128,21 +128,33 @@ function handleCellClick(index) {
 // ИИ
 function aiMove() {
     if (!gameActive) return;
-    const available = board.reduce((acc, cell, index) => (cell === 0 ? [...acc, index] : acc), []);
-    const aiChoices = available
-        .map((index) => (numbers[index] % player2Divisor === 0 ? { cell: index, value: numbers[index] } : null))
-        .filter((choice) => choice !== null)
-        .sort((a, b) => b.value - a.value);
 
-    if (aiChoices.length > 0) {
-        const bestChoice = aiChoices[0].cell;
-        board[bestChoice] = 2;
-        const cellValue = numbers[bestChoice];
-        player2Score += cellValue;
-        player2ScoreDisplay.textContent = player2Score;
-        const cell = document.querySelector(`[data-index="${bestChoice}"]`);
-        cell.classList.add('taken-2');
-    }
+    // Добавляем задержку перед ходом ИИ (например, 1 секунду)
+    setTimeout(() => {
+        const available = board.reduce((acc, cell, index) => (cell === 0 ? [...acc, index] : acc), []);
+
+        // Ограничиваем количество доступных ходов, которые ИИ может выбрать за один раз
+        const limitedChoices = available.slice(0, 5); // Например, ИИ выбирает только из первых 5 доступных клеток
+
+        const aiChoices = limitedChoices
+            .map((index) => (numbers[index] % player2Divisor === 0 ? { cell: index, value: numbers[index] } : null))
+            .filter((choice) => choice !== null)
+            .sort((a, b) => b.value - a.value);
+
+        if (aiChoices.length > 0) {
+            // ИИ выбирает случайный ход из доступных, а не самый оптимальный
+            const randomIndex = Math.floor(Math.random() * aiChoices.length);
+            const bestChoice = aiChoices[randomIndex].cell;
+
+            board[bestChoice] = 2;
+            const cellValue = numbers[bestChoice];
+            player2Score += cellValue;
+            player2ScoreDisplay.textContent = player2Score;
+
+            const cell = document.querySelector(`[data-index="${bestChoice}"]`);
+            cell.classList.add('taken-2');
+        }
+    }, 1000); // Задержка в 1000 мс (1 секунда)
 }
 
 // Функция смены хода игрока
