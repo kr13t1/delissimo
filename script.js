@@ -41,8 +41,7 @@ function getRandomNumber() {
 }
 
 // Функция создания игрового поля
-function createGrid() {
-// Функция создания игрового поля
+
 function createGrid() {
     grid.innerHTML = '';
     numbers = [];
