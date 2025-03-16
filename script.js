@@ -46,9 +46,6 @@ function createGrid() {
     numbers = [];
     board = [];
 
-    // Генерация случайных делителей для игроков
-    const player1Divisor = Math.floor(Math.random() * 8) + 2; // Случайное число от 2 до 9
-    const player2Divisor = Math.floor(Math.random() * 8) + 2; // Случайное число от 2 до 9
 
     console.log(`Player 1 Divisor: ${player1Divisor}, Player 2 Divisor: ${player2Divisor}`);
 
