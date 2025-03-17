@@ -167,18 +167,22 @@ function startGame(mode) {
     aiMode = (mode === 'ai');
 
     // Генерируем делители для каждого игрока
-  player1Divisor = getRandomDivisor();
-    player2Divisor = getRandomDivisor(); 
+ // Генерируем делители для каждого игрока
+player1Divisor = getRandomDivisor();
+player2Divisor = getRandomDivisor();
 
-    if (aiMode) {
-        while (true) {
-            let newDiv = getRandomDivisor();
-            if (newDiv !== player1Divisor) {
-                player2Divisor = newDiv;
-                break;
-            }
+if (aiMode) {
+    while (true) {
+        let newDiv = getRandomDivisor();
+        // Проверяем, чтобы не было одновременно делителей 3 и 7
+        if ((newDiv !== player1Divisor) && 
+            !(newDiv === 3 && player1Divisor === 7) && 
+            !(newDiv === 7 && player1Divisor === 3)) {
+            player2Divisor = newDiv;
+            break;
         }
     }
+}
 
     player1DivisorDisplay.textContent = player1Divisor;
     player2DivisorDisplay.textContent = player2Divisor;
