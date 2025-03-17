@@ -23,15 +23,20 @@
         }
 
         /* Значок перезагрузки */
-        #reload-icon {
-            position: fixed;
-            top: 10px;
-            left: 10px;
-            font-size: 1.5em;
-            color: #009078;
-            cursor: pointer;
-            z-index: 3;
-        }
+#reload-icon {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #009078; /* Зеленый цвет */
+    background-color: #f0f0f0; /* Серый фон */
+    border-radius: 50%;
+    padding: 5px;
+    border: none;
+    z-index: 1000;
+}
+
 
         #reload-icon:hover {
             color: #2EA692;
