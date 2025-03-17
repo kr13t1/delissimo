@@ -83,7 +83,7 @@ function createGrid() {
         }
 
         attempts++;
-        if (attempts > 150) {
+        if (attempts > 300) {
             console.warn("Не удалось сбалансировать поле после 100 попыток. Разница:", Math.abs(player1Sum - player2Sum));
             break; // Прерываем цикл, чтобы избежать бесконечного зацикливания
         }
