@@ -31,7 +31,7 @@ let aiMode = false;
 let currentPlayer = "player1";
 
 // Допустимые делители
-const allowedDivisors = [2, 3, 5, 7];
+const allowedDivisors = [3, 4, 5, 7];
 
 // Функция генерации случайного делителя
 function getRandomDivisor() {
