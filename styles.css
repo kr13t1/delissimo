@@ -1,5 +1,4 @@
-
-       /* Основные стили для страницы */
+/* Основные стили для страницы */
 body {
     font-family: 'Nunito', sans-serif;
     background-color: #f0f0f0;
@@ -22,7 +21,7 @@ h1 {
     font-weight: bold;
 }
 
-        /* Значок перезагрузки */
+/* Значок перезагрузки */
 #reload-icon {
     position: absolute;
     top: 20px;
@@ -37,53 +36,51 @@ h1 {
     z-index: 1000;
 }
 
+#reload-icon:hover {
+    color: #2EA692;
+}
 
-        #reload-icon:hover {
-            color: #2EA692;
-        }
+/* Правила игры */
+#rules {
+    margin-top: 10px;
+    text-align: left;
+    max-width: 90%;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
 
-        /* Правила игры */
-        #rules {
-            margin-top: 10px;
-            text-align: left;
-            max-width: 90%;
-            padding: 15px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
+#rules h2 {
+    font-size: 1.5em;
+    color: #2EA692;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
 
-        #rules h2 {
-            font-size: 1.5em;
-            color: #2EA692;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
+#rules ol {
+    padding-left: 20px;
+}
 
-        #rules ol {
-            padding-left: 20px;
-        }
+#rules li {
+    margin-bottom: 5px;
+    color: #555;
+}
 
-        #rules li {
-            margin-bottom: 5px;
-            color: #555;
-        }
+/* Игровое поле */
+#game-container {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    margin: 10px auto;
+    padding: 10px;
+    box-sizing: border-box;
+}
 
-        /* Игровое поле */
-        #game-container {
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            width: 100%;
-            max-width: 800px;
-            margin: 10px auto;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-
-        
 /* Адаптация для маленьких экранов */
 @media (max-width: 600px) {
     #rules {
@@ -102,242 +99,255 @@ h1 {
     #rules li {
         font-size: 0.9em; /* Уменьшенный размер шрифта */
     }
+
+    #grid {
+        grid-template-columns: repeat(8, 1fr); /* Уменьшаем количество столбцов для маленьких экранов */
+        grid-template-rows: repeat(12, 1fr); /* Увеличиваем количество строк для сохранения пропорций */
+        gap: 3px; /* Уменьшаем зазор между ячейками */
+        width: 95vw; /* Увеличиваем ширину поля */
+        height: 70vh; /* Увеличиваем высоту поля */
+        max-width: 100%; /* Убираем ограничение по максимальной ширине */
+        max-height: 100%; /* Убираем ограничение по максимальной высоте */
+    }
+
+    .cell {
+        font-size: 0.8em; /* Уменьшаем размер шрифта в ячейках */
+        border-radius: 5px; /* Уменьшаем радиус скругления углов */
+    }
 }
 
-        #grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            grid-template-rows: repeat(9, 1fr);
-            gap: 5px;
-            width: 90vw;
-            height: 60vh;
-            max-width: 800px;
-            max-height: 600px;
-            margin: 0 auto;
-        }
+#grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(9, 1fr);
+    gap: 5px;
+    width: 90vw;
+    height: 60vh;
+    max-width: 800px;
+    max-height: 600px;
+    margin: 0 auto;
+}
 
-        .cell {
-            background-color: #fff;
-            border: 2px solid #06DDBA;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1em;
-            color: #009078;
-            font-family: 'Press Start 2P', cursive;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            cursor: pointer;
-            user-select: none;
-            aspect-ratio: 1;
-        }
+.cell {
+    background-color: #fff;
+    border: 2px solid #06DDBA;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1em;
+    color: #009078;
+    font-family: 'Press Start 2P', cursive;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    user-select: none;
+    aspect-ratio: 1;
+}
 
-        .cell.taken-1 {
-            background-color: rgba(255, 107, 107, 0.5);
-            color: #888;
-        }
+.cell.taken-1 {
+    background-color: rgba(255, 107, 107, 0.5);
+    color: #888;
+}
 
-        .cell.taken-2 {
-            background-color: rgba(76, 175, 80, 0.5);
-            color: #888;
-        }
+.cell.taken-2 {
+    background-color: rgba(76, 175, 80, 0.5);
+    color: #888;
+}
 
-        /* Панель информации об игре */
-        #game-info {
-            display: flex;
-            justify-content: space-around;
-            width: 100%;
-            margin-bottom: 10px;
-            font-size: 1.2em;
-            color: #009078;
-        }
+/* Панель информации об игре */
+#game-info {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-bottom: 10px;
+    font-size: 1.2em;
+    color: #009078;
+}
 
-        .player-1 {
-            color: #FF6B6B;
-            font-weight: bold;
-        }
+.player-1 {
+    color: #FF6B6B;
+    font-weight: bold;
+}
 
-        .player-2 {
-            color: #4CAF50;
-            font-weight: bold;
-        }
+.player-2 {
+    color: #4CAF50;
+    font-weight: bold;
+}
 
-        #player-1-divisor,
-        #player-2-divisor {
-            font-weight: bold;
-            font-size: 1.1em;
-        }
+#player-1-divisor,
+#player-2-divisor {
+    font-weight: bold;
+    font-size: 1.1em;
+}
 
-        /* Панель с таймером и числом */
-        #number-panel {
-            margin-top: 10px;
-            font-size: 1.2em;
-            color: #2EA692;
-            font-weight: bold;
-        }
+/* Панель с таймером и числом */
+#number-panel {
+    margin-top: 10px;
+    font-size: 1.2em;
+    color: #2EA692;
+    font-weight: bold;
+}
 
-        
-        /* Сообщение о результате игры */
-        #game-message {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-            font-size: 1.2em;
-            font-weight: bold;
-            color: #2EA692;
-            display: none;
-            z-index: 2;
-        }
+/* Сообщение о результате игры */
+#game-message {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #2EA692;
+    display: none;
+    z-index: 2;
+}
 
-        /* Кнопки */
-        button {
-            padding: 10px 20px;
-            font-size: 0.9em;
-            font-family: 'Nunito', sans-serif;
-            color: #fff;
-            background-color: #2EA692;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+/* Кнопки */
+button {
+    padding: 10px 20px;
+    font-size: 0.9em;
+    font-family: 'Nunito', sans-serif;
+    color: #fff;
+    background-color: #2EA692;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
 
-        button:hover {
-            background-color: #009078;
-        }
+button:hover {
+    background-color: #009078;
+}
 
-        #mode-select {
-            margin-top: 10px;
-            display: flex;
-            gap: 10px;
-        }
+#mode-select {
+    margin-top: 10px;
+    display: flex;
+    gap: 10px;
+}
 
-        /* Иконка настроек */
-        #settings-icon {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            font-size: 1.5em;
-            color: #009078;
-            cursor: pointer;
-            display: none;
-            z-index: 3;
-        }
+/* Иконка настроек */
+#settings-icon {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    font-size: 1.5em;
+    color: #009078;
+    cursor: pointer;
+    display: none;
+    z-index: 3;
+}
 
-        /* Модальное окно */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
-        }
+/* Модальное окно */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
 
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 15px;
-            border: 1px solid #888;
-            width: 90%;
-            max-width: 500px;
-            border-radius: 10px;
-        }
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 15px;
+    border: 1px solid #888;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 10px;
+}
 
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 24px;
-            font-weight: bold;
-        }
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 24px;
+    font-weight: bold;
+}
 
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
 
-        /* Адаптация для маленьких экранов */
-        @media (max-width: 600px) {
-            h1 {
-                font-size: 1.5em;
-            }
+/* Адаптация для маленьких экранов */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 1.5em;
+    }
 
-            #rules h2 {
-                font-size: 1.2em;
-            }
+    #rules h2 {
+        font-size: 1.2em;
+    }
 
-            #rules ol {
-                padding-left: 15px;
-            }
+    #rules ol {
+        padding-left: 15px;
+    }
 
-            .cell {
-                font-size: 0.8em;
-            }
+    .cell {
+        font-size: 0.8em;
+    }
 
-            #game-info {
-                font-size: 1em;
-            }
+    #game-info {
+        font-size: 1em;
+    }
 
-            #number-panel {
-                font-size: 1em;
-            }
+    #number-panel {
+        font-size: 1em;
+    }
 
-            #logo {
-                width: 80px; /* Уменьшаем размер логотипа на маленьких экранах */
-            }
+    #logo {
+        width: 80px; /* Уменьшаем размер логотипа на маленьких экранах */
+    }
 
-            #back-button {
-                font-size: 1em; /* Уменьшаем размер кнопки на маленьких экранах */
-                padding: 8px 16px;
-            }
+    #back-button {
+        font-size: 1em; /* Уменьшаем размер кнопки на маленьких экранах */
+        padding: 8px 16px;
+    }
 
-            #game-message {
-                font-size: 1em;
-                padding: 10px;
-            }
+    #game-message {
+        font-size: 1em;
+        padding: 10px;
+    }
 
-            button {
-                padding: 8px 16px;
-                font-size: 0.8em;
-            }
-                
+    button {
+        padding: 8px 16px;
+        font-size: 0.8em;
+    }
+
     #restart-button {
         font-size: 1em;
         padding: 8px 16px;
     }
-        }
+}
+
 /* Логотип и кнопка "Назад" */
-        #logo {
-            position: fixed;
-            left: 20px;
-            bottom: 20px;
-            width: 100px; /* Увеличиваем размер логотипа */
-            height: auto;
-            z-index: 1000;
-        }
+#logo {
+    position: fixed;
+    left: 20px;
+    bottom: 20px;
+    width: 100px; /* Увеличиваем размер логотипа */
+    height: auto;
+    z-index: 1000;
+}
 
-        #back-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            font-size: 1.2em; /* Увеличиваем размер кнопки */
-            cursor: pointer;
-            color: #009078;
-            background-color: #f0f0f0;
-            border: 1px solid #009078;
-            border-radius: 5px;
-            padding: 10px 20px; /* Увеличиваем отступы */
-            z-index: 1000;
-        }
-
+#back-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    font-size: 1.2em; /* Увеличиваем размер кнопки */
+    cursor: pointer;
+    color: #009078;
+    background-color: #f0f0f0;
+    border: 1px solid #009078;
+    border-radius: 5px;
+    padding: 10px 20px; /* Увеличиваем отступы */
+    z-index: 1000;
 }
