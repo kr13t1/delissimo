@@ -225,17 +225,31 @@ button:hover {
     gap: 10px;
 }
 
-/* Иконка настроек */
-#settings-icon {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    font-size: 1.5em;
-    color: #009078;
-    cursor: pointer;
-    display: none;
-    z-index: 3;
-}
+
+/* Логотип и кнопка "Назад" */
+        #logo {
+            position: fixed;
+            left: 20px;
+            bottom: 20px;
+            width: 100px; /* Увеличиваем размер логотипа */
+            height: auto;
+            z-index: 1000;
+        }
+
+        #back-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            font-size: 1.2em; /* Увеличиваем размер кнопки */
+            cursor: pointer;
+            color: #009078;
+            background-color: #f0f0f0;
+            border: 1px solid #009078;
+            border-radius: 5px;
+            padding: 10px 20px; /* Увеличиваем отступы */
+            z-index: 1000;
+        }
+
 
 /* Модальное окно */
 .modal {
@@ -328,27 +342,4 @@ button:hover {
 
 
 
-/* Логотип и кнопка "Назад" */
-        #logo {
-            position: fixed;
-            left: 20px;
-            bottom: 20px;
-            width: 100px; /* Увеличиваем размер логотипа */
-            height: auto;
-            z-index: 1000;
-        }
-
-        #back-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            font-size: 1.2em; /* Увеличиваем размер кнопки */
-            cursor: pointer;
-            color: #009078;
-            background-color: #f0f0f0;
-            border: 1px solid #009078;
-            border-radius: 5px;
-            padding: 10px 20px; /* Увеличиваем отступы */
-            z-index: 1000;
-        }
 
