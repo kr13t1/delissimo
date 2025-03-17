@@ -167,28 +167,8 @@ function startGame(mode) {
     aiMode = (mode === 'ai');
 
     // Генерируем делители для каждого игрока
-   // Функция генерации случайного делителя
-function getRandomDivisor() {
-    return allowedDivisors[Math.floor(Math.random() * allowedDivisors.length)];
-}
-
-// Функция для выбора делителей с учетом ограничения
-function assignDivisors() {
-    let divisor1, divisor2;
-
-    do {
-        divisor1 = getRandomDivisor();
-        divisor2 = getRandomDivisor();
-    } while (
-        (divisor1 === 3 && divisor2 === 7) || // Проверяем, что не выбраны одновременно 3 и 7
-        (divisor1 === 7 && divisor2 === 3)    // И наоборот
-    );
-
-    return [divisor1, divisor2];
-}
-
-// Пример использования
-const [player1Divisor, player2Divisor] = assignDivisors();
+  player1Divisor = getRandomDivisor();
+    player2Divisor = getRandomDivisor(); 
 
     if (aiMode) {
         while (true) {
