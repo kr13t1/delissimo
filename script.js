@@ -38,9 +38,9 @@ function getRandomDivisor() {
     return allowedDivisors[Math.floor(Math.random() * allowedDivisors.length)];
 }
 
-// Функция генерации случайного числа от 1 до 100
+// Функция генерации случайного числа от 50 до 99
 function getRandomNumber() {
-    return Math.floor(Math.random() * 99) + 1;
+    return Math.floor(Math.random() * 50) + 50;
 }
 
 // Функция создания игрового поля с балансировкой по сумме чисел
@@ -83,12 +83,12 @@ function createGrid() {
         }
 
         attempts++;
-        if (attempts > 300) {
-            console.warn("Не удалось сбалансировать поле после 100 попыток. Разница:", Math.abs(player1Sum - player2Sum));
+        if (attempts > 400) {
+            console.warn("Не удалось сбалансировать поле после 400 попыток. Разница:", Math.abs(player1Sum - player2Sum));
             break; // Прерываем цикл, чтобы избежать бесконечного зацикливания
         }
 
-    } while (Math.abs(player1Sum - player2Sum) > 70); // Повторяем, пока разница не станет <= 50
+    } while (Math.abs(player1Sum - player2Sum) > 70); // Повторяем, пока разница не станет <= 70
 
     console.log(`Сумма для делителя ${player1Divisor}: ${player1Sum}`);
     console.log(`Сумма для делителя ${player2Divisor}: ${player2Sum}`);
