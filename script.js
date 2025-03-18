@@ -153,8 +153,8 @@ function aiMove() {
             const cell = document.querySelector(`[data-index="${bestChoice}"]`);
             cell.classList.add('taken-2');
         }
-    }, 500); // Задержка в 500 мс (0,5 секунд)
-}
+    }, 1000); // Задержка в 1000 мс (1 секунда)
+} 
 
 // Функция смены хода игрока
 function switchPlayerTurn() {
