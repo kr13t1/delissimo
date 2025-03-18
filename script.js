@@ -135,47 +135,15 @@ function aiMove() {
         // Ограничиваем количество доступных ходов, которые ИИ может выбрать за один раз
         const limitedChoices = available.slice(0, 5); // Например, ИИ выбирает только из первых 5 доступных клеток
 
-        // Функция для оценки выгоды хода
-        const evaluateMove = (index) => {
-            const cellValue = numbers[index];
-            let score = 0;
-
-            // Если ход приводит к выигрышу, увеличиваем его оценку
-            if (cellValue % player2Divisor === 0) {
-                score += cellValue;
-            }
-
-            // Если ход блокирует выигрыш игрока, увеличиваем его оценку
-            if (cellValue % player1Divisor === 0) {
-                score += cellValue * 0.5; // Блокировка менее ценна, чем выигрыш
-            }
-
-            return score;
-        };
-
         const aiChoices = limitedChoices
-            .map((index) => {
-                const value = evaluateMove(index);
-                return value > 0 ? { cell: index, value: value } : null;
-            })
+            .map((index) => (numbers[index] % player2Divisor === 0 ? { cell: index, value: numbers[index] } : null))
             .filter((choice) => choice !== null)
             .sort((a, b) => b.value - a.value);
 
         if (aiChoices.length > 0) {
-            // ИИ выбирает лучший ход из доступных
-            const bestChoice = aiChoices[0].cell;
-
-            board[bestChoice] = 2;
-            const cellValue = numbers[bestChoice];
-            player2Score += cellValue;
-            player2ScoreDisplay.textContent = player2Score;
-
-            const cell = document.querySelector(`[data-index="${bestChoice}"]`);
-            cell.classList.add('taken-2');
-        } else if (available.length > 0) {
-            // Если нет выгодных ходов, выбираем случайный
-            const randomIndex = Math.floor(Math.random() * available.length);
-            const bestChoice = available[randomIndex];
+            // ИИ выбирает случайный ход из доступных, а не самый оптимальный
+            const randomIndex = Math.floor(Math.random() * aiChoices.length);
+            const bestChoice = aiChoices[randomIndex].cell;
 
             board[bestChoice] = 2;
             const cellValue = numbers[bestChoice];
@@ -185,7 +153,7 @@ function aiMove() {
             const cell = document.querySelector(`[data-index="${bestChoice}"]`);
             cell.classList.add('taken-2');
         }
-    }, 1000); // Задержка в 1000 мс (1 секунда)
+    }, 500); // Задержка в 500 мс (0,5 секунд)
 }
 
 // Функция смены хода игрока
@@ -197,7 +165,6 @@ function switchPlayerTurn() {
 function startGame(mode) {
     aiMode = (mode === 'ai');
 
-    // Генерируем делители для каждого игрока
  // Генерируем делители для каждого игрока
 player1Divisor = getRandomDivisor();
 player2Divisor = getRandomDivisor();
