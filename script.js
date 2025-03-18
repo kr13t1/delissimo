@@ -24,7 +24,7 @@ let player1Score = 0;
 let player2Score = 0;
 let player1Divisor = 0;
 let player2Divisor = 0;
-let timeLeft = 40; // Время игры увеличено до 40 секунд
+let timeLeft = 30; // Время игры увеличено до 30 секунд
 let gameActive = false;
 let timerInterval;
 let aiMode = false;
@@ -82,8 +82,8 @@ function createGrid() {
         }
 
         attempts++;
-        if (attempts > 400) {
-            console.warn("Не удалось сбалансировать поле после 400 попыток. Разница:", Math.abs(player1Sum - player2Sum));
+        if (attempts > 300) {
+            console.warn("Не удалось сбалансировать поле после 300 попыток. Разница:", Math.abs(player1Sum - player2Sum));
             break; // Прерываем цикл, чтобы избежать бесконечного зацикливания
         }
 
@@ -180,7 +180,7 @@ if (aiMode) {
 
     player1Score = 0;
     player2Score = 0;
-    timeLeft = 40; // Время игры увеличено до 40 секунд
+    timeLeft = 30; // Время игры увеличено до 30 секунд
     gameActive = true;
 
     player1ScoreDisplay.textContent = player1Score;
@@ -245,7 +245,7 @@ function resetGame() {
     player2Score = 0;
     player1Divisor = 0;
     player2Divisor = 0;
-    timeLeft = 40;
+    timeLeft = 30;
     gameActive = false;
     aiMode = false;
     currentPlayer = "player1";
