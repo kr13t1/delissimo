@@ -128,7 +128,7 @@ function handleCellClick(index) {
 function aiMove() {
     if (!gameActive) return;
 
-    // Добавляем задержку перед ходом ИИ (например, 1 секунду)
+    // Уменьшаем задержку перед ходом ИИ (например, до 500 мс)
     setTimeout(() => {
         const available = board.reduce((acc, cell, index) => (cell === 0 ? [...acc, index] : acc), []);
 
@@ -153,8 +153,8 @@ function aiMove() {
             const cell = document.querySelector(`[data-index="${bestChoice}"]`);
             cell.classList.add('taken-2');
         }
-    }, 1000); // Задержка в 1000 мс (1 секунда)
-} 
+    }, 500); // Задержка уменьшена до 500 мс (0.5 секунды)
+}
 
 // Функция смены хода игрока
 function switchPlayerTurn() {
