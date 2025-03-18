@@ -127,33 +127,21 @@ function handleCellClick(index) {
 // ИИ
 function aiMove() {
     if (!gameActive) return;
+    const available = board.reduce((acc, cell, index) => (cell === 0 ? [...acc, index] : acc), []);
+    const aiChoices = available
+        .map((index) => (numbers[index] % player2Divisor === 0 ? { cell: index, value: numbers[index] } : null))
+        .filter((choice) => choice !== null)
+        .sort((a, b) => b.value - a.value);
 
-    // Уменьшаем задержку перед ходом ИИ (например, до 500 мс)
-    setTimeout(() => {
-        const available = board.reduce((acc, cell, index) => (cell === 0 ? [...acc, index] : acc), []);
-
-        // Ограничиваем количество доступных ходов, которые ИИ может выбрать за один раз
-        const limitedChoices = available.slice(0, 5); // Например, ИИ выбирает только из первых 5 доступных клеток
-
-        const aiChoices = limitedChoices
-            .map((index) => (numbers[index] % player2Divisor === 0 ? { cell: index, value: numbers[index] } : null))
-            .filter((choice) => choice !== null)
-            .sort((a, b) => b.value - a.value);
-
-        if (aiChoices.length > 0) {
-            // ИИ выбирает случайный ход из доступных, а не самый оптимальный
-            const randomIndex = Math.floor(Math.random() * aiChoices.length);
-            const bestChoice = aiChoices[randomIndex].cell;
-
-            board[bestChoice] = 2;
-            const cellValue = numbers[bestChoice];
-            player2Score += cellValue;
-            player2ScoreDisplay.textContent = player2Score;
-
-            const cell = document.querySelector(`[data-index="${bestChoice}"]`);
-            cell.classList.add('taken-2');
-        }
-    }, 500); // Задержка уменьшена до 500 мс (0.5 секунды)
+    if (aiChoices.length > 0) {
+        const bestChoice = aiChoices[0].cell;
+        board[bestChoice] = 2;
+        const cellValue = numbers[bestChoice];
+        player2Score += cellValue;
+        player2ScoreDisplay.textContent = player2Score;
+        const cell = document.querySelector(`[data-index="${bestChoice}"]`);
+        cell.classList.add('taken-2');
+    }
 }
 
 // Функция смены хода игрока
