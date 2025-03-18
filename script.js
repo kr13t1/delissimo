@@ -44,7 +44,6 @@ function getRandomNumber() {
 }
 
 // Функция создания игрового поля с балансировкой по сумме чисел
-// Функция создания игрового поля с балансировкой по итоговой сумме
 function createGrid() {
     let player1Sum, player2Sum;
     let attempts = 0; // Счетчик попыток для избежания бесконечного цикла
@@ -136,32 +135,35 @@ function aiMove() {
         // Ограничиваем количество доступных ходов, которые ИИ может выбрать за один раз
         const limitedChoices = available.slice(0, 5); // Например, ИИ выбирает только из первых 5 доступных клеток
 
-        // Оцениваем каждый доступный ход
-        const aiChoices = limitedChoices.map((index) => {
+        // Функция для оценки выгоды хода
+        const evaluateMove = (index) => {
             const cellValue = numbers[index];
-            let priority = 0;
+            let score = 0;
 
-            // Приоритет для клеток с высоким значением
+            // Если ход приводит к выигрышу, увеличиваем его оценку
             if (cellValue % player2Divisor === 0) {
-                priority += cellValue; // Чем больше значение, тем выше приоритет
+                score += cellValue;
             }
 
-            // Приоритет для клеток, которые могут блокировать игрока
-            if (isBlockingMove(index, 1)) {
-                priority += 50; // Добавляем дополнительный приоритет для блокирующих ходов
+            // Если ход блокирует выигрыш игрока, увеличиваем его оценку
+            if (cellValue % player1Divisor === 0) {
+                score += cellValue * 0.5; // Блокировка менее ценна, чем выигрыш
             }
 
-            return { cell: index, value: cellValue, priority };
-        }).filter((choice) => choice.priority > 0); // Отфильтровываем ходы с нулевым приоритетом
+            return score;
+        };
+
+        const aiChoices = limitedChoices
+            .map((index) => {
+                const value = evaluateMove(index);
+                return value > 0 ? { cell: index, value: value } : null;
+            })
+            .filter((choice) => choice !== null)
+            .sort((a, b) => b.value - a.value);
 
         if (aiChoices.length > 0) {
-            // Сортируем ходы по приоритету
-            aiChoices.sort((a, b) => b.priority - a.priority);
-
-            // ИИ выбирает случайный ход из топ-3 лучших вариантов
-            const topChoices = aiChoices.slice(0, 3);
-            const randomIndex = Math.floor(Math.random() * topChoices.length);
-            const bestChoice = topChoices[randomIndex].cell;
+            // ИИ выбирает лучший ход из доступных
+            const bestChoice = aiChoices[0].cell;
 
             board[bestChoice] = 2;
             const cellValue = numbers[bestChoice];
@@ -170,8 +172,8 @@ function aiMove() {
 
             const cell = document.querySelector(`[data-index="${bestChoice}"]`);
             cell.classList.add('taken-2');
-        } else {
-            // Если нет приоритетных ходов, выбираем случайный доступный ход
+        } else if (available.length > 0) {
+            // Если нет выгодных ходов, выбираем случайный
             const randomIndex = Math.floor(Math.random() * available.length);
             const bestChoice = available[randomIndex];
 
@@ -184,13 +186,6 @@ function aiMove() {
             cell.classList.add('taken-2');
         }
     }, 1000); // Задержка в 1000 мс (1 секунда)
-}
-
-// Функция для проверки, является ли ход блокирующим
-function isBlockingMove(index, player) {
-   
-    // В данном примере просто возвращаем false, но можно добавить более сложную логику
-    return false;
 }
 
 // Функция смены хода игрока
