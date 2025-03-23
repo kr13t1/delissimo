@@ -24,11 +24,12 @@ let player1Score = 0;
 let player2Score = 0;
 let player1Divisor = 0;
 let player2Divisor = 0;
-let timeLeft = 30; // Время игры увеличено до 30 секунд
+let timeLeft = 30;
 let gameActive = false;
 let timerInterval;
 let aiMode = false;
 let currentPlayer = "player1";
+let aiMoveInterval; // Интервал для ходов ИИ
 
 // Допустимые делители
 const allowedDivisors = [3, 4, 5, 7];
@@ -46,7 +47,7 @@ function getRandomNumber() {
 // Функция создания игрового поля с балансировкой по сумме чисел
 function createGrid() {
     let player1Sum, player2Sum;
-    let attempts = 0; // Счетчик попыток для избежания бесконечного цикла
+    let attempts = 0;
 
     do {
         grid.innerHTML = '';
@@ -56,10 +57,10 @@ function createGrid() {
         player2Sum = 0;
 
         // Генерация чисел для поля
-        for (let i = 0; i < 108; i++) { // 9x12 = 108 ячеек
+        for (let i = 0; i < 108; i++) {
             const randomNumber = getRandomNumber();
             numbers.push(randomNumber);
-            board.push(0); // 0 = не занято, 1 = занято игроком 1, 2 = занято игроком 2
+            board.push(0);
 
             // Обновляем суммы для контроля баланса
             if (randomNumber % player1Divisor === 0) {
@@ -84,10 +85,10 @@ function createGrid() {
         attempts++;
         if (attempts > 300) {
             console.warn("Не удалось сбалансировать поле после 300 попыток. Разница:", Math.abs(player1Sum - player2Sum));
-            break; // Прерываем цикл, чтобы избежать бесконечного зацикливания
+            break;
         }
 
-    } while (Math.abs(player1Sum - player2Sum) > 70); // Повторяем, пока разница не станет <= 70
+    } while (Math.abs(player1Sum - player2Sum) > 70);
 
     console.log(`Сумма для делителя ${player1Divisor}: ${player1Sum}`);
     console.log(`Сумма для делителя ${player2Divisor}: ${player2Sum}`);
@@ -124,9 +125,10 @@ function handleCellClick(index) {
     }
 }
 
-// ИИ
+// ИИ делает ход
 function aiMove() {
     if (!gameActive) return;
+
     const available = board.reduce((acc, cell, index) => (cell === 0 ? [...acc, index] : acc), []);
     const aiChoices = available
         .map((index) => (numbers[index] % player2Divisor === 0 ? { cell: index, value: numbers[index] } : null))
@@ -134,13 +136,27 @@ function aiMove() {
         .sort((a, b) => b.value - a.value);
 
     if (aiChoices.length > 0) {
-        const bestChoice = aiChoices[0].cell;
-        board[bestChoice] = 2;
-        const cellValue = numbers[bestChoice];
-        player2Score += cellValue;
-        player2ScoreDisplay.textContent = player2Score;
-        const cell = document.querySelector(`[data-index="${bestChoice}"]`);
-        cell.classList.add('taken-2');
+        // Выбираем только 80% подходящих чисел
+        const choicesToTake = Math.ceil(aiChoices.length * 0.8);
+        const selectedChoices = aiChoices.slice(0, choicesToTake);
+
+        // ИИ делает ходы последовательно с задержкой
+        let i = 0;
+        const makeMove = () => {
+            if (i < selectedChoices.length && gameActive) {
+                const choice = selectedChoices[i];
+                board[choice.cell] = 2;
+                const cellValue = numbers[choice.cell];
+                player2Score += cellValue;
+                player2ScoreDisplay.textContent = player2Score;
+                const cell = document.querySelector(`[data-index="${choice.cell}"]`);
+                cell.classList.add('taken-2');
+                i++;
+                setTimeout(makeMove, 1000); // Задержка между ходами ИИ (1 секунда)
+            }
+        };
+
+        makeMove(); // Начинаем последовательные ходы ИИ
     }
 }
 
@@ -151,24 +167,25 @@ function switchPlayerTurn() {
 
 // Функция начала игры
 function startGame(mode) {
+    // Если игра уже активна, не запускаем её снова
+    if (gameActive) return;
+
     aiMode = (mode === 'ai');
 
- // Генерируем делители для каждого игрока
-player1Divisor = getRandomDivisor();
-player2Divisor = getRandomDivisor();
+    // Генерируем делители для каждого игрока
+    player1Divisor = getRandomDivisor();
+    player2Divisor = getRandomDivisor();
 
-if (aiMode) {
-    while (true) {
-        let newDiv = getRandomDivisor();
-        // Проверяем, чтобы не было одновременно делителей 3 и 7
-        if ((newDiv !== player1Divisor) && 
-            !(newDiv === 3 && player1Divisor === 7) && 
-            !(newDiv === 7 && player1Divisor === 3)) {
-            player2Divisor = newDiv;
-            break;
-        }
+    // Проверяем, чтобы делители были разными
+    while (player1Divisor === player2Divisor) {
+        player2Divisor = getRandomDivisor();
     }
-}
+
+    if (aiMode) {
+        document.querySelector('.player-2').textContent = 'ИИ';
+    } else {
+        document.querySelector('.player-2').textContent = 'Игрок 2';
+    }
 
     player1DivisorDisplay.textContent = player1Divisor;
     player2DivisorDisplay.textContent = player2Divisor;
@@ -180,7 +197,7 @@ if (aiMode) {
 
     player1Score = 0;
     player2Score = 0;
-    timeLeft = 30; // Время игры увеличено до 30 секунд
+    timeLeft = 30;
     gameActive = true;
 
     player1ScoreDisplay.textContent = player1Score;
@@ -188,27 +205,35 @@ if (aiMode) {
     timerDisplay.textContent = timeLeft;
 
     createGrid();
-    startTimer();
+    startTimer(); // Запускаем таймер
+
+    // Запускаем ходы ИИ, если выбран режим с ИИ
+    if (aiMode) {
+        aiMove();
+    }
 }
 
 // Функция запуска таймера
 function startTimer() {
+    // Очищаем предыдущий интервал, если он существует
+    if (timerInterval) {
+        clearInterval(timerInterval);
+    }
+
+    // Запускаем новый интервал
     timerInterval = setInterval(() => {
         timeLeft--;
         timerDisplay.textContent = timeLeft;
-        if (gameActive && aiMode && timeLeft > 0) {
-            aiMove();
-        }
 
         if (timeLeft <= 0) {
             endGame();
         }
-    }, 1000);
+    }, 1000); // Интервал в 1 секунду
 }
 
 // Функция завершения игры
 function endGame() {
-    clearInterval(timerInterval);
+    clearInterval(timerInterval); // Очищаем интервал таймера
     gameActive = false;
 
     let message = '';
@@ -232,6 +257,7 @@ function displayGameMessage(message) {
 
 // Функция сброса игры
 function resetGame() {
+    clearInterval(timerInterval); // Очищаем интервал таймера
     gameContainer.style.display = 'none';
     settingsIcon.style.display = 'none';
     rulesDiv.style.display = 'block';
@@ -261,11 +287,11 @@ settingsIcon.addEventListener('click', () => {
 
 // Обработчик события для значка перезагрузки
 reloadIcon.addEventListener('click', () => {
-    resetGame(); // Сбрасываем игру
-    modeSelect.style.display = 'flex'; // Показываем выбор режима
-    gameContainer.style.display = 'none'; // Скрываем игровое поле
-    rulesDiv.style.display = 'block'; // Показываем правила
-    settingsIcon.style.display = 'none'; // Скрываем иконку настроек
+    resetGame();
+    modeSelect.style.display = 'flex';
+    gameContainer.style.display = 'none';
+    rulesDiv.style.display = 'block';
+    settingsIcon.style.display = 'none';
 });
 
 closeBtn.addEventListener('click', () => {
